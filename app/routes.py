@@ -43,15 +43,18 @@ def player_guess(game_id):
 
     #Validation
     def validate_guess_input(player_guess):
-        if not isinstance(player_guess, list) and len(player_guess) == CODE_LENGTH:
+        if not isinstance(player_guess, list) or len(player_guess) != CODE_LENGTH:
             return jsonify({"error": "Please enter four numbers"}), 400
-        
         for num in player_guess:
             if not isinstance(num, int):
                 return jsonify({"error": "Invalid guess - Please enter numbers only"}), 400
             if not (MIN_VALUE <= num <= MAX_VALUE):
                 return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
-        
+
+            validate_response = validate_guess_input(player_guess)
+            if validate_response:
+                return validate_response
+            
     #Comparison
     def compare_guess_to_secret(player_guess, secret):    
         secret = game["secret_code"]
