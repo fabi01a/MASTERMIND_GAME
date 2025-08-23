@@ -26,23 +26,23 @@ def create_game():
     }), 201
 
 
-# @app.route("/game/<game_id>/guess", methods = ["POST"])
-# def player_guess(game_id):
-#     game = games.get(game_id)
-#     guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
-#     player_guess = guess["guess"]
+@app.route("/game/<game_id>/guess", methods = ["POST"])
+def player_guess(game_id):
+    game = games.get(game_id)
+    guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
+    player_guess = guess["guess"]
 
-#     if game["is_over"]:
-#         return jsonify({"error": "Game over. Please start a new game to play again"}), 400
+    if game["is_over"]:
+        return jsonify({"error": "Game over. Please start a new game to play again"}), 400
     
-#     if not isinstance(player_guess, list) and len(player_guess) == 4:
-#         return jsonify({"error": "Please enter four numbers"}), 400
+    if not isinstance(player_guess, list) and len(player_guess) == 4:
+        return jsonify({"error": "Please enter four numbers"}), 400
     
-#     for num in player_guess:
-#         if not isinstance(num, int):
-#             return jsonify({"error": "Invalid guess - Please enter numbers only"}), 400
-#         if not (MIN_VALUE <= num <= MAX_VALUE):
-#             return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
+    for num in player_guess:
+        if not isinstance(num, int):
+            return jsonify({"error": "Invalid guess - Please enter numbers only"}), 400
+        if not (MIN_VALUE <= num <= MAX_VALUE):
+            return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
         
 #         correct_postitions = 0
 #         correct_numbers = 0
