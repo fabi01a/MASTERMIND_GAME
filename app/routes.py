@@ -5,6 +5,7 @@ import uuid
 games = {} #stores active games
 MIN_VALUE = 0
 MAX_VALUE = 7
+CODE_LENGTH = 4
 
 @app.route("/game", methods = ["POST"])
 def create_game():
@@ -40,7 +41,7 @@ def player_guess(game_id):
 
     #Validation
     def validate_guess_input(player_guess):
-        if not isinstance(player_guess, list) and len(player_guess) == 4:
+        if not isinstance(player_guess, list) and len(player_guess) == CODE_LENGTH:
             return jsonify({"error": "Please enter four numbers"}), 400
         
         for num in player_guess:
@@ -62,29 +63,47 @@ def player_guess(game_id):
         #Exact matches
         for index, value in enumerate(player_guess):
             if value == secret[index]:
-                correct_postitions += 1
-                secret_used = True
-                guess_used = True
+                correct_positions += 1
+                secret_used[index] = True
+                guess_used[index] = True
 
         #Partial matches        
         for index, value in enumerate(player_guess):
             if guess_used[index]:
-                continue #already counted as exact match
+                continue #already counted (as a bool) in exact match check, so lets skip it
 
-            for j, secret_val in enumerate(secret):
+            for j, secret_val in enumerate(secret): #if not, lets look for a partial match
                 if not secret_used[j] and value == secret_val:
                     correct_numbers += 1
                     secret_used[j] = True
                     break #stop checking omce guess checked 
     
-    # #Feedback
-    # def return_feedback():
-    #     feedback = {
-
-    #     }
+        #Feedback
+        def return_feedback():
+            feedback = {
+                "user_guess": player_guess,
+                "correct_positions": correct_positions,
+                "correct_numbers": correct_numbers
+            }
         
+            game["guesses"].append(feedback)
+            game["attempts_remaining"] -= 1
 
+            if correct_positions == CODE_LENGTH:
+                game["is_over"] = True
+                game["win"] = True
+                return jsonify({"message": "🥳 Congrats! You cracked the secret code!!! 🎉🎉🎉"}), 200
 
-
-
-        
+            elif game["attempts_remaining"] <= 0:
+                game["is_over"] = True
+                game["win"] = False
+                return jsonify({"message": " ❌ Game Over - No more attempts left ❌",
+                                "secret_code": game["secret_code"],
+                                "feedback": feedback
+                                }), 200
+            else:
+                return jsonify({
+                    "message": f"You got {correct_numbers} correct numbers and {correct_positions} correct spots 👀👀",
+                    "feedback": feedback,
+                    "attempts_remaining": game["attempts_remaining"]
+                }), 200
