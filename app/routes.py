@@ -51,9 +51,10 @@ def player_guess(game_id):
             if not (MIN_VALUE <= num <= MAX_VALUE):
                 return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
 
-            validate_response = validate_guess_input(player_guess)
-            if validate_response:
-                return validate_response
+    #calling validation function
+    validate_response = validate_guess_input(player_guess)
+    if validate_response:
+        return validate_response
             
     #Comparison
     def compare_guess_to_secret(player_guess, secret):    
@@ -112,3 +113,5 @@ def player_guess(game_id):
                     "feedback": feedback,
                     "attempts_remaining": game["attempts_remaining"]
                 }), 200
+            
+        return return_feedback()
