@@ -29,31 +29,61 @@ def create_game():
 @app.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
     game = games.get(game_id)
-    guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
-    player_guess = guess["guess"]
+    if not game:
+        return jsonify({"error": "Game Not Found"}), 404
 
     if game["is_over"]:
         return jsonify({"error": "Game over. Please start a new game to play again"}), 400
     
-    if not isinstance(player_guess, list) and len(player_guess) == 4:
-        return jsonify({"error": "Please enter four numbers"}), 400
-    
-    for num in player_guess:
-        if not isinstance(num, int):
-            return jsonify({"error": "Invalid guess - Please enter numbers only"}), 400
-        if not (MIN_VALUE <= num <= MAX_VALUE):
-            return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
-        
-#         correct_postitions = 0
-#         correct_numbers = 0
-        
-#         secret = game["secret_code"]
+    guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
+    player_guess = guess["guess"]
 
-#         for index, value in enumerate(player_guess):
-#             if value == secret[index]:
-#                 correct_postitions += 1
-#             if value in secret:
-#                 correct_numbers += 1
+    #Validation
+    def validate_guess_input(player_guess):
+        if not isinstance(player_guess, list) and len(player_guess) == 4:
+            return jsonify({"error": "Please enter four numbers"}), 400
+        
+        for num in player_guess:
+            if not isinstance(num, int):
+                return jsonify({"error": "Invalid guess - Please enter numbers only"}), 400
+            if not (MIN_VALUE <= num <= MAX_VALUE):
+                return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
+        
+    #Comparison
+    def compare_guess_to_secret(player_guess, secret):    
+        secret = game["secret_code"]
+        correct_postitions = 0
+        correct_numbers = 0
+
+        #temp lists to track matched indexes
+        secret_used = [False] * 4
+        guess_used = [False] * 4
+            
+        #Exact matches
+        for index, value in enumerate(player_guess):
+            if value == secret[index]:
+                correct_postitions += 1
+                secret_used = True
+                guess_used = True
+
+        #Partial matches        
+        for index, value in enumerate(player_guess):
+            if guess_used[index]:
+                continue #already counted as exact match
+
+            for j, secret_val in enumerate(secret):
+                if not secret_used[j] and value == secret_val:
+                    correct_numbers += 1
+                    secret_used[j] = True
+                    break #stop checking omce guess checked 
+    
+    # #Feedback
+    # def return_feedback():
+    #     feedback = {
+
+    #     }
+        
+
 
 
 
