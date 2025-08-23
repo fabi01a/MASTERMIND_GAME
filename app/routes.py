@@ -1,13 +1,15 @@
-from flask import app, request, jsonify
+from flask import Blueprint, app, request, jsonify
 from app.random_api import generate_secret_code
 import uuid
+
+routes = Blueprint('routes', __name__)
 
 games = {} #stores active games
 MIN_VALUE = 0
 MAX_VALUE = 7
 CODE_LENGTH = 4
 
-@app.route("/game", methods = ["POST"])
+@routes.route("/game", methods = ["POST"])
 def create_game():
     secret_code = generate_secret_code() #generate secret code from random.org
     game_id = str(uuid.uuid4()) #creates a new game id
@@ -27,7 +29,7 @@ def create_game():
     }), 201
 
 
-@app.route("/game/<game_id>/guess", methods = ["POST"])
+@routes.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
     game = games.get(game_id)
     if not game:
