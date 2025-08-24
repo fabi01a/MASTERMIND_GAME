@@ -39,7 +39,7 @@ def player_guess(game_id):
         return jsonify({"error": "Game over. Please start a new game to play again"}), 400
     
     guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
-    player_guess = guess["guess"]
+    player_guess = guess.get("guess")
 
     #Validation
     def validate_guess_input(player_guess):
@@ -59,7 +59,7 @@ def player_guess(game_id):
     #Comparison
     def compare_guess_to_secret(player_guess, secret):    
         secret = game["secret_code"]
-        correct_postitions = 0
+        correct_positions = 0
         correct_numbers = 0
 
         #temp lists to track matched indexes
