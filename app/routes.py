@@ -115,15 +115,25 @@ def player_guess(game_id):
         #Constructing feedback for ongoing game
         if correct_positions and correct_numbers:
             result_message = (
-                f"You have {correct_positions} number(s) in the correct position "
-                f"and {correct_numbers} correct number(s) in the wrong position."
+                f"You have {correct_positions} number(s) in the correct position(s) "
+                f"and {correct_numbers} correct number(s) but in the wrong position(s). "
+                f"You have {game['attempts_remaining']} attempts remaining"
             )
         elif correct_positions:
-            result_message = f"You have {correct_positions} number(s) in it's correct position."
+            result_message = (
+                f"You have {correct_positions} number(s) in the correct position(s). "
+                f"You have {game['attempts_remaining']} attempts remaining"
+            )
         elif correct_numbers:
-            result_message = f"You have {correct_numbers} number(s) but it's in the wrong position."
+            result_message = (
+                f"You have {correct_numbers} correct number(s) but in the wrong position(s). "
+                f"You have {game['attempts_remaining']} attempts remaining"
+            )
         else:
-            result_message = f"No correct numbers this time. Try again!"
+            result_message = (
+                f"No correct numbers this time. Try again! "
+                f"You have {game['attempts_remaining']} attempts remaining"
+            )
 
         # return compare_guess_to_secret(player_guess, game["secret_code"])
         return jsonify({
