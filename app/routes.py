@@ -1,4 +1,4 @@
-from flask import Blueprint, app, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from app.random_api import generate_secret_code
 import uuid
 
@@ -9,6 +9,12 @@ MIN_VALUE = 0
 MAX_VALUE = 7
 CODE_LENGTH = 4
 
+#Point of UI entry
+@routes.route("/", methods=["GET"])
+def home():
+    return render_template("index.html")
+
+#Start a new game
 @routes.route("/game", methods = ["POST"])
 def create_game():
     secret_code = generate_secret_code() #generate secret code from random.org
@@ -28,7 +34,7 @@ def create_game():
         "message": "New game created. Good Luck!"
     }), 201
 
-
+#Play the game
 @routes.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
     game = games.get(game_id)
@@ -141,4 +147,5 @@ def player_guess(game_id):
             "feedback": feedback,
             "attempts_remaining": game["attempts_remaining"]
         }), 200
+    
     return compare_guess_to_secret(player_guess, game["secret_code"])
