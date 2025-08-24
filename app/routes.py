@@ -63,17 +63,17 @@ def player_guess(game_id):
         correct_numbers = 0
 
         #temp lists to track matched indexes
-        secret_used = [False] * 4
-        guess_used = [False] * 4
+        secret_used = [False] * CODE_LENGTH
+        guess_used = [False] * CODE_LENGTH
             
-        #Exact matches
+        #First pass: Exact matches
         for index, value in enumerate(player_guess):
             if value == secret[index]:
                 correct_positions += 1
                 secret_used[index] = True
                 guess_used[index] = True
 
-        #Partial matches        
+        #Second pass: Partial matches        
         for index, value in enumerate(player_guess):
             if guess_used[index]:
                 continue #already counted (as a bool) in exact match check, so lets skip it
@@ -94,6 +94,7 @@ def player_guess(game_id):
         game["guesses"].append(feedback)
         game["attempts_remaining"] -= 1
 
+        #End conditions
         if correct_positions == CODE_LENGTH:
             game["is_over"] = True
             game["win"] = True
@@ -110,11 +111,24 @@ def player_guess(game_id):
                 "secret_code": game["secret_code"],
                 "feedback": feedback
                 }), 200
-        else:
-            return jsonify({
-                "message": f"You got {correct_numbers} correct numbers and {correct_positions} correct spots 👀👀",
-                "feedback": feedback,
-                "attempts_remaining": game["attempts_remaining"]
-            }), 200
         
+        #Constructing feedback for ongoing game
+        if correct_positions and correct_numbers:
+            result_message = (
+                f"You have {correct_positions} number(s) in the correct position "
+                f"and {correct_numbers} correct number(s) in the wrong position."
+            )
+        elif correct_positions:
+            result_message = f"You have {correct_positions} number(s) in it's correct position."
+        elif correct_numbers:
+            result_message = f"You have {correct_numbers} number(s) but it's in the wrong position."
+        else:
+            result_message = f"No correct numbers this time. Try again!"
+
+        # return compare_guess_to_secret(player_guess, game["secret_code"])
+        return jsonify({
+            "message": result_message,
+            "feedback": feedback,
+            "attempts_remaining": game["attempts_remaining"]
+        }), 200
     return compare_guess_to_secret(player_guess, game["secret_code"])
