@@ -85,33 +85,36 @@ def player_guess(game_id):
                     break #stop checking omce guess checked 
     
         #Feedback
-        def return_feedback():
-            feedback = {
-                "user_guess": player_guess,
-                "correct_positions": correct_positions,
-                "correct_numbers": correct_numbers
-            }
+        feedback = {
+            "user_guess": player_guess,
+            "correct_positions": correct_positions,
+            "correct_numbers": correct_numbers
+        }
         
-            game["guesses"].append(feedback)
-            game["attempts_remaining"] -= 1
+        game["guesses"].append(feedback)
+        game["attempts_remaining"] -= 1
 
-            if correct_positions == CODE_LENGTH:
-                game["is_over"] = True
-                game["win"] = True
-                return jsonify({"message": "🥳 Congrats! You cracked the secret code!!! 🎉🎉🎉"}), 200
-
-            elif game["attempts_remaining"] <= 0:
-                game["is_over"] = True
-                game["win"] = False
-                return jsonify({"message": " ❌ Game Over - No more attempts left ❌",
-                                "secret_code": game["secret_code"],
-                                "feedback": feedback
-                                }), 200
-            else:
-                return jsonify({
-                    "message": f"You got {correct_numbers} correct numbers and {correct_positions} correct spots 👀👀",
-                    "feedback": feedback,
-                    "attempts_remaining": game["attempts_remaining"]
+        if correct_positions == CODE_LENGTH:
+            game["is_over"] = True
+            game["win"] = True
+            return jsonify({
+                "message": "🥳 Congrats! You cracked the secret code!!! 🎉🎉🎉",
+                "feedback": feedback
                 }), 200
-            
-        return return_feedback()
+
+        elif game["attempts_remaining"] <= 0:
+            game["is_over"] = True
+            game["win"] = False
+            return jsonify({
+                "message": " ❌ Game Over - No more attempts left ❌",
+                "secret_code": game["secret_code"],
+                "feedback": feedback
+                }), 200
+        else:
+            return jsonify({
+                "message": f"You got {correct_numbers} correct numbers and {correct_positions} correct spots 👀👀",
+                "feedback": feedback,
+                "attempts_remaining": game["attempts_remaining"]
+            }), 200
+        
+    return compare_guess_to_secret(player_guess, game["secret_code"])
