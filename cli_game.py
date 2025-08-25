@@ -50,12 +50,12 @@ def start_game():
     feedbacks = []
     attempts_remaining = 10
 
+    show_instructions = True
+
     #show instructions ONCE before starting the game loop
-    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=show_instructions)
 
     while attempts_remaining > 0:
-        draw_ui(term, guesses, feedbacks, attempts_remaining)
-
         guess_input = input(term.yellow("Enter your four-digit guess: "))
 
         # Basic validation before sending to backend
@@ -65,7 +65,7 @@ def start_game():
                 raise ValueError
         except ValueError:
             print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
-            time.sleep(2)
+            time.sleep(1)
             continue
 
         # Send guess to backend
@@ -75,10 +75,16 @@ def start_game():
         if res.status_code != 200:
             print(term.red(f"Error: {result.get('error', 'Something went wrong.')}"))
             break
-
+        
+        #appending the guess and feedback
         guesses.append(guess)
         feedbacks.append(result["feedback"])
         attempts_remaining = result.get("attempts_remaining", 0)
+
+        draw_ui(term, guesses, feedbacks, attempts_remaining)
+
+        #Display custom feedback from backend
+        print(term.cyan(result["message"]))
 
         # Check win/lose condition
         if result.get("message", "").startswith("🥳"):
