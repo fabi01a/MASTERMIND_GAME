@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify
 from app.random_api import generate_secret_code
 import uuid
 
@@ -8,11 +8,6 @@ games = {} #stores active games
 MIN_VALUE = 0
 MAX_VALUE = 7
 CODE_LENGTH = 4
-
-#Point of UI entry
-@routes.route("/", methods=["GET"])
-def home():
-    return render_template("index.html")
 
 #Start a new game
 @routes.route("/game", methods = ["POST"])
