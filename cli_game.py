@@ -6,28 +6,30 @@ term = Terminal()
 
 API_URL = "http://127.0.0.1:5000"
 
-def draw_ui(term, guesses, feedbacks, attempts_remaining): #UI rendering functions
+def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #UI rendering functions
     print(term.clear()) #calls the function
     print(term.bold_underline(term.center("MASTERMIND - THE GAME")))
     print()
 
     #Display the instructions
-    print(term.bold("Game Rules:")) 
-    print("- Guess the right four-number combination between 0 -7")
-    print("- After each guess, you'll see feeback:")
-    print("     * Correct number(s) in the correct place")
-    print("     * Correct number(s) but in the wrong place")
-    print("- You have 10 attempts")
-    print(term.orange("\nWant to play with six numbers? Click here!"))
-    print(term.green("\nHit ENTER to play"))
-    input()
+    if show_instructions:
+        print(term.bold("Game Rules:")) 
+        print("- Guess the right four-number combination between 0 - 7")
+        print("- After each guess, you'll see feeback:")
+        print("     * Correct number(s) in the correct place")
+        print("     * Correct number(s) but in the wrong place")
+        print("- You have 10 attempts to crack the code")
+        print()
+        # print(term.orange("\nWant to play with six numbers? Click here!"))
+        print(term.green("\nHit ENTER to play"))
+        term.inkey()
     
-    print(term.clear)
-    print(term.bold_underline(term.center("GAME STARTED")))
-    print()
+        print(term.clear)
+        print(term.bold_underline(term.center("GAME STARTED")))
+        print()
 
-    #Display attempts
-    print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
+        #Display attempts
+        print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
 
     #if guesses exist, show the table
     if guesses: 
@@ -48,10 +50,13 @@ def start_game():
     feedbacks = []
     attempts_remaining = 10
 
+    #show instructions ONCE before starting the game loop
+    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+
     while attempts_remaining > 0:
         draw_ui(term, guesses, feedbacks, attempts_remaining)
 
-        guess_input = input(term.yellow("Enter your guess (4 digits, e.g., 1234): "))
+        guess_input = input(term.yellow("Enter your four-digit guess: "))
 
         # Basic validation before sending to backend
         try:
@@ -59,7 +64,7 @@ def start_game():
             if len(guess) != 4:
                 raise ValueError
         except ValueError:
-            print(term.red("Invalid input. Please enter exactly 4 digits (0–7)."))
+            print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
             time.sleep(2)
             continue
 
