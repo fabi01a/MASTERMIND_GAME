@@ -8,7 +8,9 @@ API_URL = "http://127.0.0.1:5000"
 
 def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #UI rendering functions
     print(term.clear()) #calls the function
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print(term.bold_underline(term.center("MASTERMIND - THE GAME")))
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print()
 
     #Display the instructions
@@ -22,6 +24,7 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         print()
         # print(term.orange("\nWant to play with six numbers? Click here!"))
         print(term.green("\nHit ENTER to play"))
+        print(term.red("\nType QUIT to end the game early"))
         term.inkey()
     
         print(term.clear)
@@ -57,6 +60,10 @@ def start_game():
 
     while attempts_remaining > 0:
         guess_input = input(term.yellow("Enter your four-digit guess: "))
+        
+        if guess_input.strip().upper() == "QUIT":
+            print(term.red("\nYou've ended the game early. Goodbye!"))
+            break
 
         # Basic validation before sending to backend
         try:
