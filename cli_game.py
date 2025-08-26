@@ -73,6 +73,7 @@ def start_game():
         except ValueError:
             print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
             time.sleep(1)
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
 
         # Send guess to backend
