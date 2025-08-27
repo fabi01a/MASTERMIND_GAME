@@ -8,19 +8,30 @@ API_URL = "http://127.0.0.1:5000"
 
 def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #UI rendering functions
     print(term.clear()) #calls the function
-    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    print(term.bold_underline(term.center("MASTERMIND - THE GAME")))
-    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    print()
+    width = term.width
+    horizontal_border = "X" * width
+
+    print(term.orange + term.bold(horizontal_border))
+
+    #Title / Box Design
+    title = "MASTERMIND - THE GAME"
+    centered_title = title.center(width - 2)
+
+    print(term.orange(f"X{term.bold(centered_title)}X"))
+    centered_title = title.center(width - 2)
+    print(term.orange + term.bold(horizontal_border))
+
 
     #Display the instructions
     if show_instructions:
-        print(term.bold("Game Rules:")) 
-        print("- Guess the right four-number combination between 0 - 7")
-        print("- After each guess, you'll see feeback:")
-        print("     * Correct number(s) in the correct place")
-        print("     * Correct number(s) but in the wrong place")
-        print("- You have 10 attempts to crack the code")
+        print(term.bold + term.center("Game Rules:")) 
+        print(term.center("- Guess the right four-number combination between 0 - 7"))
+        print(term.center("- After each guess, you'll see feeback:"))
+        print(term.center("     * Correct number(s) in the correct place"))
+        print(term.center("     * Correct number(s) but in the wrong place"))
+        print(term.center("- You have 10 attempts to crack the code"))
+        print(term.orange + term.bold(horizontal_border))
+
         print()
         # print(term.orange("\nWant to play with six numbers? Click here!"))
         print(term.green("\nHit ENTER to play"))
@@ -36,12 +47,12 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
 
     #if guesses exist, show the table
     if guesses: 
-        print("+-----------+--------------+-------------------+------------------------------+")
-        print("|  Attempt  |  Your Guess  |  Matching Digits  |  Matching Digits & Position  |")
-        print("+-----------+--------------+-------------------+------------------------------+")
+        print(term.center("+-----------+--------------+-------------------+------------------------------+"))
+        print(term.center("|  Attempt  |  Your Guess  |  Matching Digits  |  Matching Digits & Position  |"))
+        print(term.center("+-----------+--------------+-------------------+------------------------------+"))
         for i, (guess, fb) in enumerate(zip(guesses, feedbacks), start=1):
-            print(f"|   {i:<7} | {str(guess):<11} | {fb['correct_numbers']:^16} | {fb['correct_positions']:^29} |")
-        print("+-----------+--------------+-------------------+------------------------------+")
+            print(term.center(f"|   {i:<7} | {str(guess):<11} | {fb['correct_numbers']:^16} | {fb['correct_positions']:^29} |"))
+        print(term.center("+-----------+--------------+-------------------+------------------------------+"))
 
 def start_game():
     # Start new game
@@ -72,7 +83,7 @@ def start_game():
                 raise ValueError
         except ValueError:
             print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
-            time.sleep(1)
+            time.sleep(2)
             draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
 
