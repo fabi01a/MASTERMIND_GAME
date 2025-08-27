@@ -6,7 +6,7 @@ term = Terminal()
 
 API_URL = "http://127.0.0.1:5000"
 
-def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #UI rendering functions
+def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #Drawing out the UI
     print(term.clear()) #Calls the function
     width = term.width
     horizontal_border = "X" * width
@@ -26,13 +26,13 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         print(term.center("- You have 10 attempts to crack the code"))
         print(term.orange + term.bold(horizontal_border))
         print()
-        print(term.pink("\nWant to play with six numbers? Click here!"))
-        print()
+        # print(term.pink("\nWant to play with six numbers? Click here!"))
+        # print()
         print(term.green("\nHit ENTER to play"))
         print(term.red("\nType QUIT to end the game early"))
         return
 
-    #if guesses exist, show the table
+    #If guesses exist, show the table
     if guesses: 
         print(term.center("+-----------+--------------+-------------------+------------------------------+"))
         print(term.center("|  Attempt  |  Your Guess  |  Matching Digits  |  Matching Digits & Position  |"))
@@ -53,7 +53,7 @@ def start_game():
 
     show_instructions = False
 
-    #show instructions ONCE before starting the game loop
+    #Show instructions ONCE before starting the game loop
     draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
 
     #Capture user decision BEFORE entering game loop
@@ -65,13 +65,12 @@ def start_game():
             return
         elif user_input == "":
             break
-        # elif user_input == int:
-        #     print(term.red("Invalid input: Hit ENTER to begin the game"))
         else:
             print(term.red("Invalid input: Please hit ENTER to begin the game"))
             time.sleep(2)
             draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
 
+    #Clear the instructions, new GAME STARTED screen
     print(term.clear())
     width = term.width
     horizontal_border = "X" * width
@@ -88,7 +87,7 @@ def start_game():
             print(term.red("\nYou've ended the game early. Goodbye!"))
             break
 
-        # Basic validation before sending to backend
+        #Basic validation before sending to backend
         try:
             guess = [int(d) for d in guess_input if d.isdigit()]
             if len(guess) != 4:
@@ -99,7 +98,7 @@ def start_game():
             draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
 
-        # Send guess to backend
+        #Send guess to backend
         res = requests.post(f"{API_URL}/game/{game_id}/guess", json={"guess": guess})
         result = res.json()
 
@@ -107,11 +106,12 @@ def start_game():
             print(term.red(f"Error: {result.get('error', 'Something went wrong.')}"))
             break
         
-        #appending the guess and feedback
+        #Appending the guess and feedback
         guesses.append(guess)
         feedbacks.append(result["feedback"])
         attempts_remaining = result.get("attempts_remaining", 0)
-
+        
+        #Update the progress chart
         draw_ui(term, guesses, feedbacks, attempts_remaining)
 
         #Display custom feedback from backend

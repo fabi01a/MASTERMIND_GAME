@@ -52,7 +52,7 @@ def player_guess(game_id):
             if not (MIN_VALUE <= num <= MAX_VALUE):
                 return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
 
-    #calling validation function
+    #Calling validation function
     validate_response = validate_guess_input(player_guess)
     if validate_response:
         return validate_response
@@ -63,7 +63,7 @@ def player_guess(game_id):
         correct_positions = 0
         correct_numbers = 0
 
-        #temp lists to track matched indexes
+        #Temp lists to track matched indexes
         secret_used = [False] * CODE_LENGTH
         guess_used = [False] * CODE_LENGTH
             
@@ -100,7 +100,7 @@ def player_guess(game_id):
             game["is_over"] = True
             game["win"] = True
             return jsonify({
-                "message": "🥳 Congrats! You cracked the secret code!!! 🎉🎉🎉",
+                "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
                 "feedback": feedback
                 }), 200
 
@@ -116,8 +116,8 @@ def player_guess(game_id):
         #Constructing feedback for ongoing game
         if correct_positions and correct_numbers:
             result_message = (
-                f"You have {correct_positions} number(s) in the correct position(s) "
-                f"and {correct_numbers} correct number(s) but in the wrong position(s). "
+                f"You have {correct_positions} number(s) in the correct position(s)"
+                f"and {correct_numbers} correct number(s) but in the wrong position(s)"
                 f"You have {game['attempts_remaining']} attempts remaining"
             )
         elif correct_positions:
@@ -136,7 +136,7 @@ def player_guess(game_id):
                 f"You have {game['attempts_remaining']} attempts remaining"
             )
 
-        # return compare_guess_to_secret(player_guess, game["secret_code"])
+        #Return compare_guess_to_secret(player_guess, game["secret_code"])
         return jsonify({
             "message": result_message,
             "feedback": feedback,
