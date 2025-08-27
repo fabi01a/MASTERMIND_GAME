@@ -7,20 +7,14 @@ term = Terminal()
 API_URL = "http://127.0.0.1:5000"
 
 def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #UI rendering functions
-    print(term.clear()) #calls the function
+    print(term.clear()) #Calls the function
     width = term.width
     horizontal_border = "X" * width
 
-    print(term.orange + term.bold(horizontal_border))
-
     #Title / Box Design
-    title = "MASTERMIND - THE GAME"
-    centered_title = title.center(width - 2)
-
-    print(term.orange(f"X{term.bold(centered_title)}X"))
-    centered_title = title.center(width - 2)
     print(term.orange + term.bold(horizontal_border))
-
+    print(term.orange + term.bold(term.center("MASTERMIND - THE GAME")))
+    print(term.orange + term.bold(horizontal_border))
 
     #Display the instructions
     if show_instructions:
@@ -31,19 +25,12 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         print(term.center("     * Correct number(s) but in the wrong place"))
         print(term.center("- You have 10 attempts to crack the code"))
         print(term.orange + term.bold(horizontal_border))
-
         print()
-        # print(term.orange("\nWant to play with six numbers? Click here!"))
+        print(term.pink("\nWant to play with six numbers? Click here!"))
+        print()
         print(term.green("\nHit ENTER to play"))
         print(term.red("\nType QUIT to end the game early"))
-        term.inkey()
-    
-        print(term.clear)
-        print(term.bold_underline(term.center("GAME STARTED")))
-        print()
-
-        #Display attempts
-        print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
+        return
 
     #if guesses exist, show the table
     if guesses: 
@@ -54,8 +41,8 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
             print(term.center(f"|   {i:<7} | {str(guess):<11} | {fb['correct_numbers']:^16} | {fb['correct_positions']:^29} |"))
         print(term.center("+-----------+--------------+-------------------+------------------------------+"))
 
+
 def start_game():
-    # Start new game
     response = requests.post(f"{API_URL}/game")
     data = response.json()
     game_id = data["game_id"]
@@ -64,15 +51,32 @@ def start_game():
     feedbacks = []
     attempts_remaining = 10
 
-    show_instructions = True
+    show_instructions = False
 
     #show instructions ONCE before starting the game loop
-    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=show_instructions)
+    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+
+    #Capture user decision BEFORE entering game loop
+    user_input = input(term.yellow("\n")).strip()
+
+    if user_input == "QUIT":
+        print(term.red("\nYou've ended the game early. Goodbye!"))
+        return
+    # time.sleep(1)
+
+    print(term.clear())
+    width = term.width
+    horizontal_border = "X" * width
+    print(term.orange + term.bold(horizontal_border))
+    print(term.orange + term.bold(term.center("GAME STARTED")))
+    print(term.orange + term.bold(horizontal_border))
+    print()
+    print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
 
     while attempts_remaining > 0:
         guess_input = input(term.yellow("Enter your four-digit guess: "))
         
-        if guess_input.strip().upper() == "QUIT":
+        if guess_input.strip()== "QUIT":
             print(term.red("\nYou've ended the game early. Goodbye!"))
             break
 
