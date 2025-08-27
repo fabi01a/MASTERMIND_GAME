@@ -40,3 +40,17 @@ def test_invalid_guess_length(client):
     
     assert res.status_code == 400
     assert "error" in res.get_json()
+
+def test_invalid_data_type(client):
+    response = client.post("/game")
+    assert response.status_code == 201
+    game_id = response.get_json()["game_id"]
+    
+    #Bad guess with a string
+    bad_guess = {"guess": ["a", "b", "c", "d"]}
+    guess_response = client.post(f"/game/{game_id}/guess", json=bad_guess)
+
+    assert guess_response.status_code == 400
+    data = guess_response.get_json()
+    assert "error" in data
+    assert "Invalid guess" in data["error"] or "Please enter numbers only" in data["error"]
