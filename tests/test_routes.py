@@ -1,5 +1,6 @@
 import pytest
 from app import create_app
+from app.routes import games
 
 @pytest.fixture
 def client():
@@ -61,3 +62,24 @@ def test_invalid_guess_type(client, bad_guess):
         or "Please enter four numbers" in data["error"]
         or "Each number must be between" in data["error"]
     )
+
+def test_winning_game(client):
+    res = client.post("/game") #First, start a new game
+    assert res.status_code == 201
+    data = res.get_json()
+    game_id = data["game_id"]
+
+    #Manually override secret code
+    games[game_id]["secret_code"] = [2,4,0,6]
+
+    #Submit winning guess
+    guess_payload = {"guess": [2,4,0,6]}
+    guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+    assert guess_res.status_code == 200
+    result = guess_res.get_json()
+
+    #Assert correct win respose
+    assert result["feedback"]["correct_positions"] == 4
+    assert result["message"].startswith("🥳")
+    assert games[game_id]["is_over"] is True
+    assert games[game_id]["win"] is True
