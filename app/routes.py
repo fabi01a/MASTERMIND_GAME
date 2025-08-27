@@ -136,7 +136,7 @@ def player_guess(game_id):
                 f"You have {game['attempts_remaining']} attempts remaining"
             )
 
-        #Return compare_guess_to_secret(player_guess, game["secret_code"])
+        #R eturn compare_guess_to_secret(player_guess, game["secret_code"])
         return jsonify({
             "message": result_message,
             "feedback": feedback,
