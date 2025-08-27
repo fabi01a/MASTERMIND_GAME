@@ -57,12 +57,20 @@ def start_game():
     draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
 
     #Capture user decision BEFORE entering game loop
-    user_input = input(term.yellow("\n")).strip()
+    while True:
+        user_input = input(term.yellow("\n")).strip()
 
-    if user_input == "QUIT":
-        print(term.red("\nYou've ended the game early. Goodbye!"))
-        return
-    # time.sleep(1)
+        if user_input == "QUIT":
+            print(term.red("\nYou've ended the game early. Goodbye!"))
+            return
+        elif user_input == "":
+            break
+        # elif user_input == int:
+        #     print(term.red("Invalid input: Hit ENTER to begin the game"))
+        else:
+            print(term.red("Invalid input: Please hit ENTER to begin the game"))
+            time.sleep(2)
+            draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
 
     print(term.clear())
     width = term.width
