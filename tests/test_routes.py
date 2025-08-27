@@ -31,26 +31,33 @@ def test_valid_guess(client):
     assert "correct_numbers" in data["feedback"]
     assert "correct_positions" in data["feedback"]
 
-def test_invalid_guess_length(client):
-    game_id = client.post("/game").get_json()["game_id"]
 
-    #Bad guess with 3 numbers
-    bad_guess = {"guess": [1,2,3]}
-    res = client.post(f"/game/{game_id}/guess", json=bad_guess)
-    
-    assert res.status_code == 400
-    assert "error" in res.get_json()
+@pytest.mark.parametrize("bad_guess", [
+    [1, 2, "a", 4],     # string in guess
+    [1, 2, 3],          # too short
+    [1, 2, 3, 4, 5],    # too long
+    "1234",             # string instead of list
+    1234,               # int instead of list
+    ["a", "b", "c", "d"], # all strings
+    [None, 1, 2, 3],    # NoneType in guess
+    [8, 2, 1, 0],       # number out of range (>7)
+    [-1, 2, 3, 4],      # number out of range (<0)
+])
 
-def test_invalid_data_type(client):
+def test_invalid_guess_type(client, bad_guess):
     response = client.post("/game")
     assert response.status_code == 201
     game_id = response.get_json()["game_id"]
     
-    #Bad guess with a string
-    bad_guess = {"guess": ["a", "b", "c", "d"]}
-    guess_response = client.post(f"/game/{game_id}/guess", json=bad_guess)
-
-    assert guess_response.status_code == 400
-    data = guess_response.get_json()
+    #Submit bad guess
+    res = client.post(f"/game/{game_id}/guess", json={"guess": bad_guess})
+    assert res.status_code == 400
+    
+    data = res.get_json()
     assert "error" in data
-    assert "Invalid guess" in data["error"] or "Please enter numbers only" in data["error"]
+    assert (
+        "Invalid guess" in data["error"] 
+        or "Please enter numbers only" in data["error"]
+        or "Please enter four numbers" in data["error"]
+        or "Each number must be between" in data["error"]
+    )
