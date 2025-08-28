@@ -46,6 +46,8 @@ def start_game():
     response = requests.post(f"{API_URL}/game")
     data = response.json()
     game_id = data["game_id"]
+    print(response.status_code)
+    print(response.text)
 
     guesses = []
     feedbacks = []
