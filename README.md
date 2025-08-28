@@ -6,7 +6,10 @@ This version is powered by Flask, includes a terminal-based interface using bles
 
 
 
-https://github.com/user-attachments/assets/466dbdb7-0ec6-41ce-b543-a5e0245568fc
+
+
+https://github.com/user-attachments/assets/a3851c94-3eec-4457-b14f-18eb33cd4e9a
+
 
 
 
