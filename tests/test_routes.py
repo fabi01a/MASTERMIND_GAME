@@ -123,3 +123,14 @@ def test_guess_after_game_over(client):
     data = guess_res.get_json()
     assert "error" in data
     assert data["error"] == "Game over. Please start a new game to play again"
+
+def test_with_invalid_game_id(client):
+    fake_game_id = "nonexistent-game-id-1234"
+    payload = {"guess": [1,1,2,3]}
+
+    response = client.post(f"/game/{fake_game_id}/guess", json=payload)
+
+    assert response.status_code == 404
+    data = response.get_json()
+    assert "error" in data
+    assert data["error"] == "Game Not Found"
