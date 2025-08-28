@@ -83,3 +83,25 @@ def test_winning_game(client):
     assert result["message"].startswith("🥳")
     assert games[game_id]["is_over"] is True
     assert games[game_id]["win"] is True
+
+def test_losing_game(client):
+    res = client.post("/game") #First, start a new game
+    assert res.status_code == 201
+    data = res.get_json()
+    game_id = data["game_id"]
+
+    #Manually override secret code
+    games[game_id]["secret_code"] = [2,4,0,6]
+
+    #Submit 10 wrong guesses
+    for _ in range(10):
+        guess_payload = {"guess": [1,1,1,1]}
+        guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+        assert guess_res.status_code == 200
+        
+    #Assert correct loss respose
+    result = guess_res.get_json()
+    assert result["message"].startswith("❌")
+    assert result["secret_code"] == [2,4,0,6]
+    assert games[game_id]["is_over"] is True
+    assert games[game_id]["win"] is False

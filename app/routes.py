@@ -59,14 +59,6 @@ def player_guess(game_id):
             
     #Comparison
     def compare_guess_to_secret(player_guess, secret):
-        guess = request.get_json()
-        player_guess = guess.get("guess")
-
-        #Call validation before anything
-        validate_response = validate_guess_input(player_guess)
-        if validate_response:
-            return validate_response
-
         secret = game["secret_code"]
         correct_positions = 0
         correct_numbers = 0
@@ -116,7 +108,7 @@ def player_guess(game_id):
             game["is_over"] = True
             game["win"] = False
             return jsonify({
-                "message": " ❌ Game Over - No more attempts left ❌",
+                "message": "❌ Game Over - No more attempts left ❌",
                 "secret_code": game["secret_code"],
                 "feedback": feedback
                 }), 200
