@@ -4,6 +4,10 @@ Mastermind is a number-guessing game where the player tries to crack a secret 4-
 
 This version is powered by Flask, includes a terminal-based interface using blessed, and integrates with an external random number generator API to generate secure secret codes.
 
+
+https://github.com/user-attachments/assets/1b127076-aae4-4c52-966b-ef05679a1c4e
+
+
 ---
 
 ## 🧐 HOW IT WORKS
