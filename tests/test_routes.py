@@ -105,3 +105,21 @@ def test_losing_game(client):
     assert result["secret_code"] == [2,4,0,6]
     assert games[game_id]["is_over"] is True
     assert games[game_id]["win"] is False
+
+def test_guess_after_game_over(client):
+    res = client.post("/game") #First, start a new game
+    assert res.status_code == 201
+    data = res.get_json()
+    game_id = data["game_id"]
+
+    #Manually end game
+    games[game_id]["is_over"] = True
+
+    #Try to make a guess after the game is over
+    guess_payload = {"guess": [1,2,3,4]}
+    guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+
+    assert guess_res.status_code == 400
+    data = guess_res.get_json()
+    assert "error" in data
+    assert data["error"] == "Game over. Please start a new game to play again"
