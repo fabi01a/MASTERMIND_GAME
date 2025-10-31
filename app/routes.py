@@ -9,6 +9,7 @@ MIN_VALUE = 0
 MAX_VALUE = 7
 CODE_LENGTH = 4
 
+
 #Start a new game
 @routes.route("/game", methods = ["POST"])
 def create_game():
@@ -42,7 +43,7 @@ def player_guess(game_id):
     guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
     player_guess = guess.get("guess")
 
-    #Validation
+    #Validation***
     def validate_guess_input(player_guess):
         if not isinstance(player_guess, list) or len(player_guess) != CODE_LENGTH:
             return jsonify({"error": "Please enter four numbers"}), 400
