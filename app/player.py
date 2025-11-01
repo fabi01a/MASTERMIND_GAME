@@ -6,7 +6,7 @@ class Player(db.Model):
 class GameSession(db.Model):
     game_session_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # timer = pass
-    player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'))
+    player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
     # difficulty_level = pass
     attempts_remaining = db.Column(db.Integer,default=10)
     is_over = db.Column(db.Boolean, default=False)
@@ -15,10 +15,13 @@ class GameSession(db.Model):
     # multi_player = pass
     guesses = db.relationship('Guess', backref='game_session')
 
-class Guess():
-    guess_id = pass
-    game_session_id = pass foreign key
-    guess_value = pass
-    correct_positions = pass
-    correct_numbers = pass
-    time_stamp = pass
+class Guess(db.Model):
+    guess_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    game_session_id = db.Column(
+        db.Integer, 
+        db.ForeignKey('game_session.game_session_id'),
+        nullable=False
+    )
+    guess_value = db.Column(db.JSON, nullable=False)
+    correct_positions = db.Column(db.Integer, nullable=False)
+    correct_numbers = db.Column(db.Integer, nullable=False)
