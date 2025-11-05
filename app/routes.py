@@ -1,10 +1,14 @@
+# from app import db
+# from app.models.player import Player
+# from app.models.gameSession import GameSession
+# from app.models.guess import Guess
 from flask import Blueprint, request, jsonify
 from app.random_api import generate_secret_code
 import uuid
 
 routes = Blueprint('routes', __name__)
 
-games = {} #stores active games
+# games = {} #stores active games
 MIN_VALUE = 0
 MAX_VALUE = 7
 CODE_LENGTH = 4
@@ -13,22 +17,31 @@ CODE_LENGTH = 4
 #Start a new game
 @routes.route("/game", methods = ["POST"])
 def create_game():
-    secret_code = generate_secret_code() #generate secret code from random.org
-    game_id = str(uuid.uuid4()) #creates a new game id
-    games[game_id] = {
-        "secret_code": secret_code,
-        "guesses": [],
-        "attempts_remaining": 10,
-        "is_over": False,
-        "win": False
-    }
+    request_body = request.get_json()
+    player_name = request_body["player_name"]
+    
+    player = Player.query.filter_by(player_name=player_name).first()
+    if not player:
+        player = Player(player_name=player_name)
+        db.session.add(player)
+        db.session.commit()
+    
+    secret_code = generate_secret_code()
+
+    game_sesh = GameSession(
+        player_id = player.player_id,
+        secret_code = secret_code
+    )
+    db.session.add(game_sesh)
+    db.session.commit ()
 
     return jsonify({
-        "game_id": game_id,
-        "max_attempts": 10,
-        "number range": [0,7],
+        "game_id": game_sesh.game_session_id,
+        "max_attempts": game_sesh.attempts_remaining,
+        "number_range": [0,7],
         "message": "New game created. Good Luck!"
     }), 201
+
 
 #Play the game
 @routes.route("/game/<game_id>/guess", methods = ["POST"])
@@ -93,26 +106,26 @@ def player_guess(game_id):
             "correct_numbers": correct_numbers
         }
         
-        game["guesses"].append(feedback)
-        game["attempts_remaining"] -= 1
+        # game["guesses"].append(feedback)
+        # game["attempts_remaining"] -= 1
 
         #End conditions
-        if correct_positions == CODE_LENGTH:
-            game["is_over"] = True
-            game["win"] = True
-            return jsonify({
-                "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
-                "feedback": feedback
-                }), 200
+        # if correct_positions == CODE_LENGTH:
+            # game["is_over"] = True
+            # game["win"] = True
+            # return jsonify({
+            #     "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
+            #     "feedback": feedback
+            #     }), 200
 
-        elif game["attempts_remaining"] <= 0:
-            game["is_over"] = True
-            game["win"] = False
-            return jsonify({
-                "message": "❌ Game Over - No more attempts left ❌",
-                "secret_code": game["secret_code"],
-                "feedback": feedback
-                }), 200
+        # elif game["attempts_remaining"] <= 0:
+        #     game["is_over"] = True
+        #     game["win"] = False
+        #     return jsonify({
+        #         "message": "❌ Game Over - No more attempts left ❌",
+        #         "secret_code": game["secret_code"],
+        #         "feedback": feedback
+        #         }), 200
         
         #Constructing feedback for ongoing game
         if correct_positions and correct_numbers:
