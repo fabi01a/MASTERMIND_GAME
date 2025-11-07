@@ -1,4 +1,4 @@
-from app import db
+from app.extensions import db
 
 class GameSession(db.Model):
     game_session_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
