@@ -1,7 +1,7 @@
-from app.__init__ import db
 from app.models.player import Player
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
+from app import db
 from flask import Blueprint, request, jsonify
 from app.random_api import generate_secret_code
 import uuid
