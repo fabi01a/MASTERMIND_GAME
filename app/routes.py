@@ -1,7 +1,7 @@
-# from app import db
-# from app.models.player import Player
-# from app.models.gameSession import GameSession
-# from app.models.guess import Guess
+from app import db
+from app.models.player import Player
+from app.models.gameSession import GameSession
+from app.models.guess import Guess
 from flask import Blueprint, request, jsonify
 from app.random_api import generate_secret_code
 import uuid
@@ -43,7 +43,6 @@ def create_game():
     }), 201
 
 
-#Play the game
 @routes.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
     game = games.get(game_id)
