@@ -1,4 +1,4 @@
-from app import db
+from app.__init__ import db
 from app.models.player import Player
 from app.models.gameSession import GameSession
 from app.models.guess import Guess

@@ -18,13 +18,13 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    #import and register routes
-    from app.routes import routes
-    app.register_blueprint(routes)
-
     #import models so Flask-Migrate can see them
     from app.models.player import Player
     from app.models.gameSession  import GameSession
     from app.models.guess import Guess
+    
+    #import and register routes
+    from app.routes import routes
+    app.register_blueprint(routes)
     
     return app
