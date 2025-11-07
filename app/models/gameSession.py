@@ -12,3 +12,6 @@ class GameSession(db.Model):
     session_ended = db.Column(db.DateTime, nullable=True)
     # multi_player = pass
     guesses = db.relationship('Guess', backref='game_session')
+
+    def __repr__(self):
+        return f"<Game Session {self.game_session_id} - Player: {self.player.player_name}>"
