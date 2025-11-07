@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-# from app.routes import routes
+from app.routes import routes
 
 #create db instance globally
 db = SQLAlchemy()
