@@ -21,19 +21,25 @@ def test_create_game(client):
     assert data["max_attempts"] == 10
     assert "message" in data
 
-# def test_valid_guess(client):
-#     create_res = client.post("/game") #First, create a game
-#     game_id = create_res.get_json()["game_id"]
+def test_valid_guess(client):
+    create_res = client.post("/game", json={"player_name": "TestPlayer"})
+    print(create_res.status_code)
+    print(create_res.get_data(as_text=True))
 
-#     #Make a valid guess
-#     guess_payload = {"guess": [1,2,3,4]}
-#     guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+    game_id = create_res.get_json()["game_id"]
 
-#     assert guess_res.status_code == 200
-#     data = guess_res.get_json()
-#     assert "feedback" in data
-#     assert "correct_numbers" in data["feedback"]
-#     assert "correct_positions" in data["feedback"]
+    #Make a valid guess
+    guess_payload = {"guess": [1,2,3,4]}
+    guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+
+    assert guess_res.status_code == 200
+    data = guess_res.get_json()
+    assert "feedback" in data
+    assert "correct_numbers" in data["feedback"]
+    assert "correct_positions" in data["feedback"]
+
+    print(create_res.status_code)
+    print(create_res.get_data(as_text=True))
 
 
 # @pytest.mark.parametrize("bad_guess", [
