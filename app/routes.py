@@ -97,36 +97,49 @@ def player_guess(game_id):
                     correct_numbers += 1
                     secret_used[j] = True
                     break #stop checking omce guess checked 
-    
-        #Feedback
+        
+        #Save Guess to DB
+        new_guess = Guess(
+            game_session_id=game.game_session_id,
+            guess_value=player_guess,
+            correct_positions=correct_positions,
+            correct_numbers=correct_numbers
+        )
+        db.session.add(new_guess)
+
+        #updating game state
+        game.attempts_remaining -= 1
+
         feedback = {
-            "user_guess": player_guess,
-            "correct_positions": correct_positions,
-            "correct_numbers": correct_numbers
+            "user_guess":player_guess,
+            "correct_positions": new_guess.correct_positions,
+            "correct_numbers": new_guess.correct_numbers
         }
-        
-        # game["guesses"].append(feedback)
-        # game["attempts_remaining"] -= 1
+        print("Correct positions:", correct_positions)
+        print("Winning guess detected? ", correct_positions == CODE_LENGTH)
 
-        #End conditions
-        # if correct_positions == CODE_LENGTH:
-            # game["is_over"] = True
-            # game["win"] = True
-            # return jsonify({
-            #     "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
-            #     "feedback": feedback
-            #     }), 200
 
-        # elif game["attempts_remaining"] <= 0:
-        #     game["is_over"] = True
-        #     game["win"] = False
-        #     return jsonify({
-        #         "message": "❌ Game Over - No more attempts left ❌",
-        #         "secret_code": game["secret_code"],
-        #         "feedback": feedback
-        #         }), 200
+        # End conditions
+        if correct_positions == CODE_LENGTH:
+            game.is_over = True
+            game.win = True
+            db.session.commit()
+            return jsonify({
+                "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
+                "feedback": feedback
+                }), 200
+
+        elif game.attempts_remaining <= 0:
+            game.is_over = True
+            game.win = False
+            return jsonify({
+                "message": "❌ Game Over - No more attempts left ❌",
+                "secret_code": game.secret_code,
+                "feedback": feedback
+                }), 200
         
-        #Constructing feedback for ongoing game
+        # #Constructing feedback for ongoing game
+        db.session.commit()
         if correct_positions and correct_numbers:
             result_message = (
                 f"You have {correct_positions} number(s) in the correct position(s)"
