@@ -100,27 +100,33 @@ def test_winning_game(client):
     assert updated_game.is_over is True
     assert updated_game.win is True
 
-# def test_losing_game(client):
-#     res = client.post("/game") #First, start a new game
-#     assert res.status_code == 201
-#     data = res.get_json()
-#     game_id = data["game_id"]
+def test_losing_game(client):
+    res = client.post("/game", json={"player_name": "TestPlayer"})#First, start a new game
+    assert res.status_code == 201
+    data = res.get_json()
+    game_id = data["game_id"]
 
-#     #Manually override secret code
-#     games[game_id]["secret_code"] = [2,4,0,6]
+    #Manually override secret code
+    from app.models.gameSession import GameSession
+    from app import db
+    game = db.session.get(GameSession, game_id)
+    game.secret_code = [2,4,0,6]
+    db.session.commit()
 
-#     #Submit 10 wrong guesses
-#     for _ in range(10):
-#         guess_payload = {"guess": [1,1,1,1]}
-#         guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
-#         assert guess_res.status_code == 200
+    #Submit 10 wrong guesses
+    for _ in range(10):
+        guess_payload = {"guess": [1,1,1,1]}
+        guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+        assert guess_res.status_code == 200
         
-#     #Assert correct loss respose
-#     result = guess_res.get_json()
-#     assert result["message"].startswith("❌")
-#     assert result["secret_code"] == [2,4,0,6]
-#     assert games[game_id]["is_over"] is True
-#     assert games[game_id]["win"] is False
+    #Assert correct loss respose
+    result = guess_res.get_json()
+    assert result["message"].startswith("❌")
+    assert result["secret_code"] == [2,4,0,6]
+    
+    updated_game = db.session.get(GameSession, game_id)
+    assert updated_game.is_over is True
+    assert updated_game.win is False
 
 # def test_guess_after_game_over(client):
 #     res = client.post("/game") #First, start a new game

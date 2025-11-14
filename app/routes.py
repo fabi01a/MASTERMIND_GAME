@@ -132,6 +132,7 @@ def player_guess(game_id):
         elif game.attempts_remaining <= 0:
             game.is_over = True
             game.win = False
+            db.session.commit()
             return jsonify({
                 "message": "❌ Game Over - No more attempts left ❌",
                 "secret_code": game.secret_code,
