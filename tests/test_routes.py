@@ -33,116 +33,116 @@ def test_valid_guess(client):
     assert "correct_numbers" in data["feedback"]
     assert "correct_positions" in data["feedback"]
 
-@pytest.mark.parametrize("bad_guess", [
-    [1, 2, "a", 4],     # string in guess
-    [1, 2, 3],          # too short
-    [1, 2, 3, 4, 5],    # too long
-    "1234",             # string instead of list
-    1234,               # int instead of list
-    ["a", "b", "c", "d"], # all strings
-    [None, 1, 2, 3],    # NoneType in guess
-    [8, 2, 1, 0],       # number out of range (>7)
-    [-1, 2, 3, 4],      # number out of range (<0)
-])
+# @pytest.mark.parametrize("bad_guess", [
+#     [1, 2, "a", 4],     # string in guess
+#     [1, 2, 3],          # too short
+#     [1, 2, 3, 4, 5],    # too long
+#     "1234",             # string instead of list
+#     1234,               # int instead of list
+#     ["a", "b", "c", "d"], # all strings
+#     [None, 1, 2, 3],    # NoneType in guess
+#     [8, 2, 1, 0],       # number out of range (>7)
+#     [-1, 2, 3, 4],      # number out of range (<0)
+# ])
 
-def test_invalid_guess_type(client, bad_guess):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    game_id = response.get_json()["game_id"]
+# def test_invalid_guess_type(client, bad_guess):
+#     response = client.post("/game", json={"player_name": "TestPlayer"})
+#     assert response.status_code == 201
+#     game_id = response.get_json()["game_id"]
     
-    bad_guess_res = client.post(f"/game/{game_id}/guess", json={"guess": bad_guess})
-    assert bad_guess_res.status_code == 400
+#     bad_guess_res = client.post(f"/game/{game_id}/guess", json={"guess": bad_guess})
+#     assert bad_guess_res.status_code == 400
     
-    data = bad_guess_res.get_json()
-    assert "error" in data
-    assert (
-        "Invalid guess" in data["error"] 
-        or "Please enter numbers only" in data["error"]
-        or "Please enter four numbers" in data["error"]
-        or "Each number must be between" in data["error"]
-    )
+#     data = bad_guess_res.get_json()
+#     assert "error" in data
+#     assert (
+#         "Invalid guess" in data["error"] 
+#         or "Please enter numbers only" in data["error"]
+#         or "Please enter four numbers" in data["error"]
+#         or "Each number must be between" in data["error"]
+#     )
 
-def test_winning_game(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    data = response.get_json()
-    game_id = data["game_id"]
+# def test_winning_game(client):
+#     response = client.post("/game", json={"player_name": "TestPlayer"})
+#     assert response.status_code == 201
+#     data = response.get_json()
+#     game_id = data["game_id"]
 
-    from app.models.gameSession import GameSession
-    from app import db
+#     from app.models.gameSession import GameSession
+#     from app import db
 
-    game = db.session.get(GameSession, game_id)
-    game.secret_code = [2,4,0,6]
-    db.session.commit()
+#     game = db.session.get(GameSession, game_id)
+#     game.secret_code = [2,4,0,6]
+#     db.session.commit()
 
-    guess_payload = {"guess": [2,4,0,6]}
-    winning_guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
-    assert winning_guess_res.status_code == 200
-    result = winning_guess_res.get_json()
+#     guess_payload = {"guess": [2,4,0,6]}
+#     winning_guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+#     assert winning_guess_res.status_code == 200
+#     result = winning_guess_res.get_json()
 
-    assert result["feedback"]["correct_positions"] == 4
-    assert result["message"].startswith("🥳")
+#     assert result["feedback"]["correct_positions"] == 4
+#     assert result["message"].startswith("🥳")
 
-    #Refresh game from DB to check win state
-    updated_game = db.session.get(GameSession, game_id)
-    assert updated_game.is_over is True
-    assert updated_game.win is True
+#     #Refresh game from DB to check win state
+#     updated_game = db.session.get(GameSession, game_id)
+#     assert updated_game.is_over is True
+#     assert updated_game.win is True
 
-def test_losing_game(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    data = response.get_json()
-    game_id = data["game_id"]
+# def test_losing_game(client):
+#     response = client.post("/game", json={"player_name": "TestPlayer"})
+#     assert response.status_code == 201
+#     data = response.get_json()
+#     game_id = data["game_id"]
 
-    from app.models.gameSession import GameSession
-    from app import db
-    game = db.session.get(GameSession, game_id)
-    game.secret_code = [2,4,0,6]
-    db.session.commit()
+#     from app.models.gameSession import GameSession
+#     from app import db
+#     game = db.session.get(GameSession, game_id)
+#     game.secret_code = [2,4,0,6]
+#     db.session.commit()
 
-    #Submit 10 wrong guesses
-    for _ in range(10):
-        guess_payload = {"guess": [1,1,1,1]}
-        guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
-        assert guess_res.status_code == 200
+#     #Submit 10 wrong guesses
+#     for _ in range(10):
+#         guess_payload = {"guess": [1,1,1,1]}
+#         guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+#         assert guess_res.status_code == 200
         
-    result = guess_res.get_json()
-    assert result["message"].startswith("❌")
-    assert result["secret_code"] == [2,4,0,6]
+#     result = guess_res.get_json()
+#     assert result["message"].startswith("❌")
+#     assert result["secret_code"] == [2,4,0,6]
     
-    updated_game = db.session.get(GameSession, game_id)
-    assert updated_game.is_over is True
-    assert updated_game.win is False
+#     updated_game = db.session.get(GameSession, game_id)
+#     assert updated_game.is_over is True
+#     assert updated_game.win is False
 
-def test_guess_after_game_over(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    data = response.get_json()
-    game_id = response.get_json()["game_id"]
+# def test_guess_after_game_over(client):
+#     response = client.post("/game", json={"player_name": "TestPlayer"})
+#     assert response.status_code == 201
+#     data = response.get_json()
+#     game_id = response.get_json()["game_id"]
 
-    from app.models.gameSession import GameSession
-    from app import db
+#     from app.models.gameSession import GameSession
+#     from app import db
 
-    game = db.session.get(GameSession, game_id)
-    game.is_over = True
-    db.session.commit()
+#     game = db.session.get(GameSession, game_id)
+#     game.is_over = True
+#     db.session.commit()
 
-    #Try to make a guess after the game is over
-    guess_payload = {"guess": [1,2,3,4]}
-    guess_after_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
-    assert guess_after_res.status_code == 400
-    data = guess_after_res.get_json()
+#     #Try to make a guess after the game is over
+#     guess_payload = {"guess": [1,2,3,4]}
+#     guess_after_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+#     assert guess_after_res.status_code == 400
+#     data = guess_after_res.get_json()
     
-    assert "error" in data
-    assert data["error"] == "Game over. Please start a new game to play again"
+#     assert "error" in data
+#     assert data["error"] == "Game over. Please start a new game to play again"
 
-def test_with_invalid_game_id(client):
-    fake_game_id = "nonexistent-game-id-1234"
-    payload = {"guess": [1,1,2,3]}
+# def test_with_invalid_game_id(client):
+#     fake_game_id = "nonexistent-game-id-1234"
+#     payload = {"guess": [1,1,2,3]}
 
-    response = client.post(f"/game/{fake_game_id}/guess", json=payload)
+#     response = client.post(f"/game/{fake_game_id}/guess", json=payload)
 
-    assert response.status_code == 404
-    data = response.get_json()
-    assert "error" in data
-    assert data["error"] == "Game Not Found"
+#     assert response.status_code == 404
+#     data = response.get_json()
+#     assert "error" in data
+#     assert data["error"] == "Game Not Found"

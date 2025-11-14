@@ -1,6 +1,9 @@
 from app.models.player import Player
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
+from app.services.player_service import get_or_create_player
+from app.services.game_service import create_game_session
+
 from app import db
 from flask import Blueprint, request, jsonify
 from app.random_api import generate_secret_code
@@ -8,7 +11,6 @@ import uuid
 
 routes = Blueprint('routes', __name__)
 
-# games = {} #stores active games
 MIN_VALUE = 0
 MAX_VALUE = 7
 CODE_LENGTH = 4
@@ -20,20 +22,12 @@ def create_game():
     request_body = request.get_json()
     player_name = request_body["player_name"]
     
-    player = Player.query.filter_by(player_name=player_name).first()
-    if not player:
-        player = Player(player_name=player_name)
-        db.session.add(player)
-        db.session.commit()
+    player = get_or_create_player(player_name)
     
     secret_code = generate_secret_code()
 
-    game_sesh = GameSession(
-        player_id = player.player_id,
-        secret_code = secret_code
-    )
-    db.session.add(game_sesh)
-    db.session.commit ()
+    #resp:starts new game
+    game_sesh = create_game_session(player.player_id, secret_code)
 
     return jsonify({
         "game_id": game_sesh.game_session_id,
