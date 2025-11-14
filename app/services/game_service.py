@@ -1,6 +1,5 @@
 from app.models.gameSession import GameSession
 from app.models.player import Player
-
 from app import db
 
 def create_game_session(player_id: int, secret_code: list[int]) -> GameSession:

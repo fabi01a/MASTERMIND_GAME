@@ -1,9 +1,10 @@
+from app.game_settings import MIN_VALUE, MAX_VALUE, CODE_LENGTH
 from app.models.player import Player
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
 from app.services.player_service import get_or_create_player
 from app.services.game_service import create_game_session
-
+from app.utils.validation import validate_guess_input, InvalidGuessError
 from app import db
 from flask import Blueprint, request, jsonify
 from app.random_api import generate_secret_code
@@ -11,22 +12,14 @@ import uuid
 
 routes = Blueprint('routes', __name__)
 
-MIN_VALUE = 0
-MAX_VALUE = 7
-CODE_LENGTH = 4
-
-
-#Start a new game
 @routes.route("/game", methods = ["POST"])
 def create_game():
     request_body = request.get_json()
     player_name = request_body["player_name"]
     
+    #initialize core game components
     player = get_or_create_player(player_name)
-    
     secret_code = generate_secret_code()
-
-    #resp:starts new game
     game_sesh = create_game_session(player.player_id, secret_code)
 
     return jsonify({
@@ -36,33 +29,21 @@ def create_game():
         "message": "New game created. Good Luck!"
     }), 201
 
-
 @routes.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
     game = db.session.get(GameSession, game_id)
     if not game:
         return jsonify({"error": "Game Not Found"}), 404
-
     if game.is_over:
         return jsonify({"error": "Game over. Please start a new game to play again"}), 400
     
     guess = request.get_json() #extracts the json body from incoming POST request and stores in guess
     player_guess = guess.get("guess")
 
-    #Validation***
-    def validate_guess_input(player_guess):
-        if not isinstance(player_guess, list) or len(player_guess) != CODE_LENGTH:
-            return jsonify({"error": "Please enter four numbers"}), 400
-        for num in player_guess:
-            if not isinstance(num, int):
-                return jsonify({"error": "Invalid guess - Please enter numbers only"}), 400
-            if not (MIN_VALUE <= num <= MAX_VALUE):
-                return jsonify({"error": "Invalid guess - Each number must be between 0 - 7"}), 400
-
-    #Calling validation function
-    validate_response = validate_guess_input(player_guess)
-    if validate_response:
-        return validate_response
+    try:
+        validate_guess_input(player_guess)
+    except InvalidGuessError as e:
+        return jsonify({"error": e.message}), 400
             
     #Comparison
     def compare_guess_to_secret(player_guess, secret):
