@@ -1,8 +1,10 @@
 import pytest
 from app import create_app
-from app.models.player import Player
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
+from app.models.player import Player
+from app.utils.guess_evaluation import get_exact_matches, get_partial_matches, evaluate_guess
+
 
 @pytest.fixture
 def client():
@@ -33,34 +35,34 @@ def test_valid_guess(client):
     assert "correct_numbers" in data["feedback"]
     assert "correct_positions" in data["feedback"]
 
-# @pytest.mark.parametrize("bad_guess", [
-#     [1, 2, "a", 4],     # string in guess
-#     [1, 2, 3],          # too short
-#     [1, 2, 3, 4, 5],    # too long
-#     "1234",             # string instead of list
-#     1234,               # int instead of list
-#     ["a", "b", "c", "d"], # all strings
-#     [None, 1, 2, 3],    # NoneType in guess
-#     [8, 2, 1, 0],       # number out of range (>7)
-#     [-1, 2, 3, 4],      # number out of range (<0)
-# ])
+@pytest.mark.parametrize("bad_guess", [
+    [1, 2, "a", 4],     # string in guess
+    [1, 2, 3],          # too short
+    [1, 2, 3, 4, 5],    # too long
+    "1234",             # string instead of list
+    1234,               # int instead of list
+    ["a", "b", "c", "d"], # all strings
+    [None, 1, 2, 3],    # NoneType in guess
+    [8, 2, 1, 0],       # number out of range (>7)
+    [-1, 2, 3, 4],      # number out of range (<0)
+])
 
-# def test_invalid_guess_type(client, bad_guess):
-#     response = client.post("/game", json={"player_name": "TestPlayer"})
-#     assert response.status_code == 201
-#     game_id = response.get_json()["game_id"]
+def test_invalid_guess_type(client, bad_guess):
+    response = client.post("/game", json={"player_name": "TestPlayer"})
+    assert response.status_code == 201
+    game_id = response.get_json()["game_id"]
     
-#     bad_guess_res = client.post(f"/game/{game_id}/guess", json={"guess": bad_guess})
-#     assert bad_guess_res.status_code == 400
+    bad_guess_res = client.post(f"/game/{game_id}/guess", json={"guess": bad_guess})
+    assert bad_guess_res.status_code == 400
     
-#     data = bad_guess_res.get_json()
-#     assert "error" in data
-#     assert (
-#         "Invalid guess" in data["error"] 
-#         or "Please enter numbers only" in data["error"]
-#         or "Please enter four numbers" in data["error"]
-#         or "Each number must be between" in data["error"]
-#     )
+    data = bad_guess_res.get_json()
+    assert "error" in data
+    assert (
+        "Invalid guess" in data["error"] 
+        or "Please enter numbers only" in data["error"]
+        or "Please enter four numbers" in data["error"]
+        or "Each number must be between" in data["error"]
+    )
 
 # def test_winning_game(client):
 #     response = client.post("/game", json={"player_name": "TestPlayer"})

@@ -1,10 +1,10 @@
 import requests
 import random
 
-def generate_secret_code():
+def generate_secret_code(code_length):
     url = "https://www.random.org/integers/"
     params = {
-        "num": 4,
+        "num": code_length,
         "min": 0,
         "max": 7,
         "col": 1,
@@ -14,8 +14,8 @@ def generate_secret_code():
     }
 
     try:
-        response = requests.get(url, params=params, timeout=5) #sends the get request to the api
+        response = requests.get(url, params=params, timeout=5)
         response.raise_for_status()
         return [int(line) for line in response.text.strip().splitlines()]
     except requests.RequestException:
-        return [random.randint(0,7) for _ in range(4)]
+        return [random.randint(0,7) for _ in range(code_length)]
