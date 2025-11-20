@@ -1,17 +1,15 @@
+from flask import Blueprint, request, jsonify
 from app import db
-from app.game_settings import MIN_VALUE, MAX_VALUE
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
-from app.models.player import Player
 from app.random_api import generate_secret_code
 from app.services.game_outcome_service import check_game_outcome
 from app.services.game_service import create_game_session
 from app.services.player_service import get_or_create_player
 from app.utils.feedback import generate_feedback_message
-from app.utils.guess_evaluation import get_exact_matches, get_partial_matches, evaluate_guess
+from app.utils.guess_evaluation import evaluate_guess
 from app.utils.validation import validate_guess_input, InvalidGuessError
-from flask import Blueprint, request, jsonify
-import uuid
+
 
 routes = Blueprint('routes', __name__)
 
@@ -31,7 +29,7 @@ def create_game():
         "max_attempts": game_sesh.attempts_remaining,
         "number_range": [0,7],
         "code_length": game_sesh.code_length,
-        "message": f"New game created. Good Luck {player_name}!"
+        "message": f"New game created - Good Luck {player_name}!"
     }), 201
 
 
@@ -41,7 +39,7 @@ def player_guess(game_id):
     if not game:
         return jsonify({"error": "Game Not Found"}), 404
     if game.is_over:
-        return jsonify({"error": "Game over. Please start a new game to play again"}), 400
+        return jsonify({"error": "Game over - Please start a new game to play again"}), 400
     
     data = request.get_json() 
     player_guess = data.get("guess")
@@ -62,7 +60,7 @@ def player_guess(game_id):
         correct_positions=correct_positions,
         correct_numbers=correct_numbers
     )
-    
+
     db.session.add(new_guess)
     game.attempts_remaining -= 1
 

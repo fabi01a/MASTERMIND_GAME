@@ -1,29 +1,33 @@
 import pytest
 from app import create_app
 from app.models.gameSession import GameSession
-from app.models.guess import Guess
 from app.models.player import Player
-from app.utils.guess_evaluation import get_exact_matches, get_partial_matches, evaluate_guess
+
+TEST_PLAYER_NAME = "TestPlayer"
 
 @pytest.fixture
 def client():
     app = create_app({"TESTING": True})
     with app.test_client() as client:
-        yield client 
+        yield client         
+
+def create_test_game(client, player_name=TEST_PLAYER_NAME):
+    res = client.post("/game", json={"player_name": TEST_PLAYER_NAME})
+    assert res.status_code == 201
+    return res.get_json()["game_id"] 
 
 def test_create_game(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
+    response = client.post("/game", json={"player_name": TEST_PLAYER_NAME})
     data = response.get_json()
 
+    assert response.status_code == 201
     assert "game_id" in data
     assert "max_attempts" in data
     assert data["max_attempts"] == 10
     assert "message" in data
 
 def test_valid_guess(client):
-    create_res = client.post("/game", json={"player_name": "TestPlayer"})
-    game_id = create_res.get_json()["game_id"]
+    game_id = create_test_game(client)
 
     guess_payload = {"guess": [1,2,3,4]}
     valid_guess_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
@@ -47,10 +51,8 @@ def test_valid_guess(client):
 ])
 
 def test_invalid_guess_type(client, bad_guess):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    game_id = response.get_json()["game_id"]
-    
+    game_id = create_test_game(client)
+
     bad_guess_res = client.post(f"/game/{game_id}/guess", json={"guess": bad_guess})
     assert bad_guess_res.status_code == 400
     
@@ -64,10 +66,7 @@ def test_invalid_guess_type(client, bad_guess):
     )
 
 def test_winning_game(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    data = response.get_json()
-    game_id = data["game_id"]
+    game_id = create_test_game(client)
 
     from app.models.gameSession import GameSession
     from app import db
@@ -90,10 +89,7 @@ def test_winning_game(client):
     assert updated_game.win is True
 
 def test_losing_game(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    data = response.get_json()
-    game_id = data["game_id"]
+    game_id = create_test_game(client)
 
     from app.models.gameSession import GameSession
     from app import db
@@ -116,10 +112,7 @@ def test_losing_game(client):
     assert updated_game.win is False
 
 def test_guess_after_game_over(client):
-    response = client.post("/game", json={"player_name": "TestPlayer"})
-    assert response.status_code == 201
-    data = response.get_json()
-    game_id = response.get_json()["game_id"]
+    game_id = create_test_game(client)
 
     from app.models.gameSession import GameSession
     from app import db
@@ -135,7 +128,7 @@ def test_guess_after_game_over(client):
     data = guess_after_res.get_json()
     
     assert "error" in data
-    assert data["error"] == "Game over. Please start a new game to play again"
+    assert data["error"] == "Game over - Please start a new game to play again"
 
 def test_with_invalid_game_id(client):
     fake_game_id = "nonexistent-game-id-1234"
