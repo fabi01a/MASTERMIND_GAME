@@ -5,7 +5,6 @@ from app.models.guess import Guess
 from app.models.player import Player
 from app.utils.guess_evaluation import get_exact_matches, get_partial_matches, evaluate_guess
 
-
 @pytest.fixture
 def client():
     app = create_app({"TESTING": True})
@@ -116,35 +115,35 @@ def test_losing_game(client):
     assert updated_game.is_over is True
     assert updated_game.win is False
 
-# def test_guess_after_game_over(client):
-#     response = client.post("/game", json={"player_name": "TestPlayer"})
-#     assert response.status_code == 201
-#     data = response.get_json()
-#     game_id = response.get_json()["game_id"]
+def test_guess_after_game_over(client):
+    response = client.post("/game", json={"player_name": "TestPlayer"})
+    assert response.status_code == 201
+    data = response.get_json()
+    game_id = response.get_json()["game_id"]
 
-#     from app.models.gameSession import GameSession
-#     from app import db
+    from app.models.gameSession import GameSession
+    from app import db
 
-#     game = db.session.get(GameSession, game_id)
-#     game.is_over = True
-#     db.session.commit()
+    game = db.session.get(GameSession, game_id)
+    game.is_over = True
+    db.session.commit()
 
-#     #Try to make a guess after the game is over
-#     guess_payload = {"guess": [1,2,3,4]}
-#     guess_after_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
-#     assert guess_after_res.status_code == 400
-#     data = guess_after_res.get_json()
+    #Try to make a guess after the game is over
+    guess_payload = {"guess": [1,2,3,4]}
+    guess_after_res = client.post(f"/game/{game_id}/guess", json=guess_payload)
+    assert guess_after_res.status_code == 400
+    data = guess_after_res.get_json()
     
-#     assert "error" in data
-#     assert data["error"] == "Game over. Please start a new game to play again"
+    assert "error" in data
+    assert data["error"] == "Game over. Please start a new game to play again"
 
-# def test_with_invalid_game_id(client):
-#     fake_game_id = "nonexistent-game-id-1234"
-#     payload = {"guess": [1,1,2,3]}
+def test_with_invalid_game_id(client):
+    fake_game_id = "nonexistent-game-id-1234"
+    payload = {"guess": [1,1,2,3]}
 
-#     response = client.post(f"/game/{fake_game_id}/guess", json=payload)
+    response = client.post(f"/game/{fake_game_id}/guess", json=payload)
 
-#     assert response.status_code == 404
-#     data = response.get_json()
-#     assert "error" in data
-#     assert data["error"] == "Game Not Found"
+    assert response.status_code == 404
+    data = response.get_json()
+    assert "error" in data
+    assert data["error"] == "Game Not Found"
