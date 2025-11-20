@@ -5,7 +5,10 @@ from app.models.guess import Guess
 from app.models.player import Player
 from app.random_api import generate_secret_code
 from app.services.game_service import create_game_session
+from app.services.game_outcome_service import check_game_outcome
 from app.services.player_service import get_or_create_player
+from app.utils.feedback import generate_feedback_message
+
 from app.utils.guess_evaluation import get_exact_matches, get_partial_matches, evaluate_guess
 from app.utils.validation import validate_guess_input, InvalidGuessError
 from flask import Blueprint, request, jsonify
@@ -61,60 +64,26 @@ def player_guess(game_id):
         correct_numbers=correct_numbers
     )
     db.session.add(new_guess)
-
     game.attempts_remaining -= 1
+
+    feedback_message = generate_feedback_message(
+        correct_positions,
+        correct_numbers,
+        game.attempts_remaining
+    )
 
     feedback = {
         "user_guess": player_guess,
-        "correct_positions": new_guess.correct_positions,
-        "correct_numbers": new_guess.correct_numbers
+        "correct_positions": correct_positions,
+        "correct_numbers": correct_numbers
     }
 
-    if correct_positions == game.code_length:
-        game.is_over = True
-        game.win = True
-        db.session.commit()
-        return jsonify({
-            "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
-            "feedback": feedback
-        }), 200
-
-    if game.attempts_remaining <= 0:
-        game.is_over = True
-        game.win = False
-        db.session.commit()
-        return jsonify({
-            "message": "❌ Game Over - No more attempts left ❌",
-            "secret_code": game.secret_code,
-            "feedback": feedback
-        }), 200
-    
-    db.session.commit()
-
-    if correct_positions and correct_numbers:
-        result_message = (
-            f"You have {correct_positions} number(s) in the correct position(s)"
-            f"and {correct_numbers} correct number(s) but in the wrong position(s)"
-            f"You have {game.attempts_remaining} attempts remaining"
-        )
-    elif correct_positions:
-        result_message = (
-            f"You have {correct_positions} number(s) in the correct position(s). "
-            f"You have {game.attempts_remaining} attempts remaining"
-        )
-    elif correct_numbers:
-        result_message = (
-            f"You have {correct_numbers} correct number(s) but in the wrong position(s). "
-            f"You have {game.attempts_remaining} attempts remaining"
-        )
-    else:
-        result_message = (
-            f"No correct numbers this time. Try again! "
-            f"You have {game.attempts_remaining} attempts remaining"
-        )
+    outcome_response = check_game_outcome(game, correct_positions, feedback)
+    if outcome_response:
+        return jsonify(outcome_response), 200
 
     return jsonify({
-        "message": result_message,
+        "message": feedback_message,
         "feedback": feedback,
         "attempts_remaining": game.attempts_remaining
     }), 200
