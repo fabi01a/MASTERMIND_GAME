@@ -5,11 +5,14 @@ from app.extensions import db, migrate
 def create_app(test_config=None):
     app = Flask(__name__)
     
-    #configure SQLite as the DB
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    db_path = os.path.join(basedir, '..', 'mastermind.db')
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    if test_config:
+        app.config.update(test_config)
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+            "DATABASE_URL", 
+            "postgresql://mastermind_user:yourpassword@localhost/mastermind_db"
+        )
+        app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     #initialize extentions
     db.init_app(app)
