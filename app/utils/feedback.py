@@ -19,6 +19,6 @@ def generate_feedback_message(correct_positions: int, correct_numbers: int, atte
         )
     else:
         return (
-            f"No correct numbers this time - Try again!"
+            f"No correct numbers this time - Try again! "
             f"You have {attempts_remaining} attempts remaining"
         )
