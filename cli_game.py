@@ -108,7 +108,7 @@ def start_game():
         #Basic validation before sending to backend
         try:
             guess = [int(d) for d in guess_input if d.isdigit()]
-            if len(guess) != 4:
+            if len(guess) != 4 or any(d < 0 or d > 7 for d in guess):
                 raise ValueError
         except ValueError:
             print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
