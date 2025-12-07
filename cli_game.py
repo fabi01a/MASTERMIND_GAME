@@ -60,92 +60,112 @@ def start_game():
     data = response.json()
     game_id = data["game_id"]
     attempts_remaining = data["max_attempts"]
-    # print(response.status_code)
-    # print(response.text)
+    print(response.status_code)
+    print(response.text)
 
-    # guesses = []
-    # feedbacks = []
-    # attempts_remaining = 10
+    guesses = []
+    feedbacks = []
+    attempts_remaining = 10
 
     show_instructions = False
 
     #Show instructions ONCE before starting the game loop
-    # draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
 
-    # #Capture user decision BEFORE entering game loop
-    # while True:
-    #     user_input = input(term.yellow("\n")).strip()
+    #Capture user decision BEFORE entering game loop
+    while True:
+        with term.cbreak():  # read input one key at a time
+            key = term.inkey()
+            
+            if key.name == "KEY_ENTER":
+                break
+            elif key == "Q":
+                print(term.red("\nYou've ended the game early. Goodbye!"))
+                exit()
+            elif key == " ":
+                # Ignore spacebar completely
+                continue
+            else:
+                print(term.red("Invalid input: Please hit ENTER to begin the game"))
+                time.sleep(2)
+                
+                
+        # user_input = input(term.yellow("\n"))
 
-    #     if user_input == "QUIT":
-    #         print(term.red("\nYou've ended the game early. Goodbye!"))
-    #         return
-    #     elif user_input == "":
-    #         break
-    #     else:
-    #         print(term.red("Invalid input: Please hit ENTER to begin the game"))
-    #         time.sleep(2)
-    #         draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+        # if user_input == "":
+        #     break
+        # elif user_input == "QUIT":
+        #     print(term.red("\nYou've ended the game early. Goodbye!"))
+        #     return
+        # elif user_input.isspace():
+        #     print(term.red("Spaces are not allowed. Please hit ENTER to begin the game"))
+        #     time.sleep(2)
+        #     draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+        # else:
+        #     print(term.red("Invalid input: Please hit ENTER to begin the game"))
+        #     time.sleep(2)
+        #     draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
 
-    # #Clear the instructions, new GAME STARTED screen
-    # print(term.clear())
-    # width = term.width
-    # horizontal_border = "X" * width
-    # print(term.orange + term.bold(horizontal_border))
-    # print(term.orange + term.bold(term.center("GAME STARTED")))
-    # print(term.orange + term.bold(horizontal_border))
-    # print()
-    # print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
+    #Clear the instructions, new GAME STARTED screen
+    print(term.clear())
+    width = term.width
+    horizontal_border = "X" * width
+    print(term.orange + term.bold(horizontal_border))
+    print(term.orange + term.bold(term.center("GAME STARTED")))
+    print(term.orange + term.bold(horizontal_border))
+    print()
+    print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
 
-    # while attempts_remaining > 0:
-    #     guess_input = input(term.yellow("Enter your four-digit guess: "))
+    while attempts_remaining > 0:
+        guess_input = input(term.yellow("Enter your four-digit guess: "))
         
-    #     if guess_input.strip()== "QUIT":
-    #         print(term.red("\nYou've ended the game early. Goodbye!"))
-    #         break
+        if guess_input.strip()== "QUIT":
+            print(term.red("\nYou've ended the game early. Goodbye!"))
+            break
 
-    #     #Basic validation before sending to backend
-    #     try:
-    #         guess = [int(d) for d in guess_input if d.isdigit()]
-    #         if len(guess) != 4:
-    #             raise ValueError
-    #     except ValueError:
-    #         print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
-    #         time.sleep(2)
-    #         draw_ui(term, guesses, feedbacks, attempts_remaining)
-    #         continue
+        #Basic validation before sending to backend
+        try:
+            guess = [int(d) for d in guess_input if d.isdigit()]
+            if len(guess) != 4:
+                raise ValueError
+        except ValueError:
+            print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
+            time.sleep(2)
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
+            continue
 
-    #     #Send guess to backend
-    #     res = requests.post(f"{API_URL}/game/{game_id}/guess", json={"guess": guess})
-    #     result = res.json()
+        #Send guess to backend
+        res = requests.post(f"{API_URL}/game/{game_id}/guess", json={"guess": guess})
+        result = res.json()
 
-    #     if res.status_code != 200:
-    #         print(term.red(f"Error: {result.get('error', 'Something went wrong.')}"))
-    #         break
+        if res.status_code != 200:
+            print(term.red(f"Error: {result.get('error', 'Something went wrong.')}"))
+            break
         
-    #     #Appending the guess and feedback
-    #     guesses.append(guess)
-    #     feedbacks.append(result["feedback"])
-    #     attempts_remaining = result.get("attempts_remaining", 0)
+        #Appending the guess and feedback
+        guesses.append(guess)
+        feedbacks.append(result["feedback"])
+        attempts_remaining = result.get("attempts_remaining", 0)
         
-    #     #Update the progress chart
-    #     draw_ui(term, guesses, feedbacks, attempts_remaining)
+        #Update the progress chart
+        draw_ui(term, guesses, feedbacks, attempts_remaining)
 
-    #     #Display custom feedback from backend
-    #     print(term.cyan(result["message"]))
+        #Display custom feedback from backend
+        print(term.cyan(result["message"]))
 
-    #     # Check win/lose condition
-    #     if result.get("message", "").startswith("🥳"):
-    #         draw_ui(term, guesses, feedbacks, attempts_remaining)
-    #         print(term.green(result["message"]))
-    #         break
-    #     elif result.get("message", "").startswith(" ❌"):
-    #         draw_ui(term, guesses, feedbacks, 0)
-    #         print(term.red(result["message"]))
-    #         print(term.red(f"The secret code was: {result['secret_code']}"))
-    #         break
+        # Check win/lose condition
+        if result.get("message", "").startswith("🥳"):
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
+            print(term.green(result["message"]))
+            break
+        elif result.get("message", "").startswith(" ❌"):
+            draw_ui(term, guesses, feedbacks, 0)
+            print(term.red(result["message"]))
+            print(term.red(f"The secret code was: {result['secret_code']}"))
+            break
 
-    # print(term.bold("\nGame Over. Thanks for playing!"))
-    # input("Press ENTER to exit.")
+    print(term.bold("\nGame Over. Thanks for playing!"))
+    input("Press ENTER to exit.")
 
 
 if __name__ == "__main__":
