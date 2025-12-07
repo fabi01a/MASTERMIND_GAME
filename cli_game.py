@@ -6,7 +6,7 @@ term = Terminal()
 
 API_URL = "http://127.0.0.1:5000"
 
-def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False): #Drawing out the UI
+def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False):
     print(term.clear()) #Calls the function
     width = term.width
     horizontal_border = "X" * width
@@ -29,7 +29,7 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         # print(term.pink("\nWant to play with six numbers? Click here!"))
         # print()
         print(term.green("\nHit ENTER to play"))
-        print(term.red("\nType QUIT to end the game early"))
+        print(term.red("\nType Q to end the game early"))
         return
 
     #If guesses exist, show the table
@@ -49,7 +49,6 @@ def start_game():
     if not player_name:
         print(term.red("Player name cannot be empty. Exiting...."))
         return
-
     try:
         response = requests.post(f"{API_URL}/game", json={"player_name": player_name})
         response.raise_for_status()
@@ -89,23 +88,6 @@ def start_game():
                 print(term.red("Invalid input: Please hit ENTER to begin the game"))
                 time.sleep(2)
                 
-                
-        # user_input = input(term.yellow("\n"))
-
-        # if user_input == "":
-        #     break
-        # elif user_input == "QUIT":
-        #     print(term.red("\nYou've ended the game early. Goodbye!"))
-        #     return
-        # elif user_input.isspace():
-        #     print(term.red("Spaces are not allowed. Please hit ENTER to begin the game"))
-        #     time.sleep(2)
-        #     draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
-        # else:
-        #     print(term.red("Invalid input: Please hit ENTER to begin the game"))
-        #     time.sleep(2)
-        #     draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
-
     #Clear the instructions, new GAME STARTED screen
     print(term.clear())
     width = term.width
@@ -119,7 +101,7 @@ def start_game():
     while attempts_remaining > 0:
         guess_input = input(term.yellow("Enter your four-digit guess: "))
         
-        if guess_input.strip()== "QUIT":
+        if guess_input.strip()== "Q":
             print(term.red("\nYou've ended the game early. Goodbye!"))
             break
 
