@@ -48,7 +48,7 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
 
 def start_game():
     print(term.clear())
-    player_name = input(term.cyan("Enter your player name: ")).strip()
+    player_name = input(term.cyan("Enter your player name: ")).strip().lower()
 
     if not player_name:
         print(term.red("Player name cannot be empty. Exiting...."))
