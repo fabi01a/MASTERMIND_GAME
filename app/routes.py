@@ -16,11 +16,16 @@ routes = Blueprint('routes', __name__)
 @routes.route("/game", methods = ["POST"])
 def create_game():
     request_body = request.get_json()
-    player_name = request_body["player_name"]
+    player_name = request_body["player_name"].strip()
     code_length = request_body.get("code_length", 4)
 
     #initialize core game components
-    player = get_or_create_player(player_name)
+    player, is_returning = get_or_create_player(player_name)
+    if is_returning:
+        message = f"Welcome back, {player.player_name}! New game created - Good Luck!"
+    else:
+        message = f"New game created - Good Luck {player.player_name}!"
+
     secret_code = generate_secret_code(code_length)
     game_sesh = create_game_session(player.player_id, secret_code, code_length)
 
@@ -29,7 +34,7 @@ def create_game():
         "max_attempts": game_sesh.attempts_remaining,
         "number_range": [0,7],
         "code_length": game_sesh.code_length,
-        "message": f"New game created - Good Luck {player_name}!"
+        "message": message
     }), 201
 
 

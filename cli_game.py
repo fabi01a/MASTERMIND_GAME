@@ -6,7 +6,7 @@ term = Terminal()
 
 API_URL = "http://127.0.0.1:5000"
 
-def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False):
+def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False, welcome_message=None):
     print(term.clear()) #Calls the function
     width = term.width
     horizontal_border = "X" * width
@@ -28,6 +28,10 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         print()
         # print(term.pink("\nWant to play with six numbers? Click here!"))
         # print()
+    
+        if welcome_message:
+            print(term.cyan(term.center(welcome_message)))
+
         print(term.green("\nHit ENTER to play"))
         print(term.red("\nType Q to end the game early"))
         return
@@ -58,18 +62,18 @@ def start_game():
 
     data = response.json()
     game_id = data["game_id"]
+    welcome_message = data.get("message")
     attempts_remaining = data["max_attempts"]
     print(response.status_code)
     print(response.text)
 
     guesses = []
     feedbacks = []
-    attempts_remaining = 10
-
+    # attempts_remaining = data["max_attempts"]
     show_instructions = False
 
     #Show instructions ONCE before starting the game loop
-    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True)
+    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True, welcome_message=welcome_message)
 
     #Capture user decision BEFORE entering game loop
     while True:
