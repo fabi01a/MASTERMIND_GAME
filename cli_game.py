@@ -144,13 +144,13 @@ def start_game():
             draw_ui(term, guesses, feedbacks, attempts_remaining)
             print(term.green(result["message"]))
             break
-        elif result.get("message", "").startswith(" ❌"):
+        elif result.get("message", "").startswith("❌"):
             draw_ui(term, guesses, feedbacks, 0)
             print(term.red(result["message"]))
             print(term.red(f"The secret code was: {result['secret_code']}"))
             break
 
-    print(term.bold("\nGame Over. Thanks for playing!"))
+    print(term.bold(f"\nThanks for playing, {player_name}!"))
     input("Press ENTER to exit.")
 
 
