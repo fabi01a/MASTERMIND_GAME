@@ -1,7 +1,16 @@
 from app import db
 
-def generate_feedback_message(correct_positions: int, correct_numbers: int, attempts_remaining: int) -> str:
-    if correct_positions and correct_numbers:
+def generate_feedback_message(
+        correct_positions: int, 
+        correct_numbers: int, 
+        attempts_remaining: int,
+        player_name: str
+    ) -> str:
+
+    if attempts_remaining == 1:
+        return f"👀   Last chance to crack the code, {player_name}!   👀"
+    
+    elif correct_positions and correct_numbers:
         return (
             f"You have {correct_positions} number(s) in the correct position(s)"
             f"and {correct_numbers} correct number(s) but in the wrong position(s)"

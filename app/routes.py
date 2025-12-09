@@ -17,11 +17,10 @@ routes = Blueprint('routes', __name__)
 def create_game():
     request_body = request.get_json()
     raw_name = request_body["player_name"].strip()
-    normalized_name = raw_name.lower()
     code_length = request_body.get("code_length", 4)
 
     #initialize core game components
-    player, is_returning = get_or_create_player(normalized_name)
+    player, is_returning = get_or_create_player(raw_name)
     if is_returning:
         message = f"Welcome back, {raw_name}! New game created - Good Luck!"
     else:
@@ -42,6 +41,8 @@ def create_game():
 @routes.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
     game = db.session.get(GameSession, game_id)
+    player = game.player
+    
     if not game:
         return jsonify({"error": "Game Not Found"}), 404
     if game.is_over:
@@ -71,9 +72,10 @@ def player_guess(game_id):
     game.attempts_remaining -= 1
 
     feedback_message = generate_feedback_message(
-        correct_positions,
-        correct_numbers,
-        game.attempts_remaining
+        correct_positions=correct_positions,
+        correct_numbers=correct_numbers,
+        attempts_remaining=game.attempts_remaining,
+        player_name=player.player_name
     )
 
     feedback = {
