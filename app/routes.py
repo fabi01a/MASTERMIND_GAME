@@ -21,7 +21,7 @@ def create_game():
     code_length = request_body.get("code_length", 4)
 
     #initialize core game components
-    player, is_returning = get_or_create_player(player_name)
+    player, is_returning = get_or_create_player(normalized_name)
     if is_returning:
         message = f"Welcome back, {raw_name}! New game created - Good Luck!"
     else:
