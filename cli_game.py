@@ -48,71 +48,21 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
 
 def start_game():
     print(term.clear())
-    player_name = input(term.cyan("Enter your player name: ")).strip().lower()
-
-    if not player_name:
-        print(term.red("Player name cannot be empty. Exiting...."))
-        return
-    # try:
-    #     response = requests.post(f"{API_URL}/game", json={
-    #         "player_name": player_name, 
-    #         "code_length": code_length
-    #     })
-    #     response.raise_for_status()
-    # except requests.exceptions.RequestException as e:
-    #     print(term.red(f"Failed to start game: {e}"))
-    #     return
-
-    # data = response.json()
-    # game_id = data["game_id"]
-    # welcome_message = data.get("message")
-    # attempts_remaining = data["max_attempts"]
-    # print(response.status_code)
-    # print(response.text)
 
     guesses = []
     feedbacks = []
     attempts_remaining = 10 
-    show_instructions = True
 
-    #Show instructions ONCE before starting the game loop
-    draw_ui(term, 
-            guesses,
-            feedbacks, 
-            attempts_remaining, 
-            show_instructions=True, 
-            welcome_message=None
-    )
-
-    #Ask for difficulty selection
-    difficulty_input = ""
-    print(term.green("Enter 1 or 2 and press ENTER to begin"))
-    with term.cbreak():  # read input one key at a time
-        while True:
-            key = term.inkey()
-
-            if key == " ": # Ignore spacebar completely
-                continue
-            elif key == "Q":
-                print(term.red("\nYou've ended the game early. Goodbye!"))
-                exit()
-            elif key.name == "KEY_ENTER":
-                if difficulty_input in ("1","2"):
-                    break
-            else:
-                difficulty_input += key
-                if difficulty_input not in ("1", "2"):
-                    print(term.red("Invalid input: Please enter 1 for Easy or 2 for Hard"))
-                    time.sleep(2)
-                    difficulty_input = ""
-                    print(term.green("Enter 1 or 2 and press ENTER: "), end="", flush=True)
-
-    code_length = 4 if difficulty_input == "1" else 6
-
+    player_name = input(term.cyan("Enter your player name: ")).strip().lower()
+    if not player_name:
+        print(term.red("Player name cannot be empty. Exiting...."))
+        return
+    
+    temp_code_length = 4
     try:
         response = requests.post(f"{API_URL}/game", json={
             "player_name": player_name, 
-            "code_length": code_length
+            "code_length": temp_code_length
         })
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
@@ -131,6 +81,43 @@ def start_game():
             show_instructions=True, 
             welcome_message=welcome_message
     )
+
+    difficulty_input = ""
+    print(term.green("Enter 1 or 2 and press ENTER to begin"))
+    with term.cbreak():  # read input one key at a time
+        while True:
+            key = term.inkey()
+            if key == " ": # Ignore spacebar completely
+                continue
+            elif key == "Q":
+                print(term.red("\nYou've ended the game early. Goodbye!"))
+                exit()
+            elif key.name == "KEY_ENTER":
+                if difficulty_input in ("1","2"):
+                    break
+            else:
+                difficulty_input += key
+                if difficulty_input not in ("1", "2"):
+                    print(term.red("Invalid input: Please enter 1 for Easy or 2 for Hard"))
+                    time.sleep(2)
+                    difficulty_input = ""
+                    print(term.green("Enter 1 or 2 and press ENTER: "), end="", flush=True)
+
+    code_length = 4 if difficulty_input == "1" else 6
+    if code_length != temp_code_length:
+        try:
+            response = requests.post(f"{API_URL}/game", json={
+                "player_name": player_name, 
+                "code_length": temp_code_length
+            })
+            response.raise_for_status()
+            data = response.json()
+            welcome_message = data.get("message")
+            game_id = data["game_id"]
+            attempts_remaining = data["max_attempts"]
+        except requests.exceptions.RequestException as e:
+            print(term.red(f"Failed to start game: {e}"))
+            return
 
     #Clear the instructions, new GAME STARTED screen
     print(term.clear())
