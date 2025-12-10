@@ -19,20 +19,20 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
     #Display the instructions
     if show_instructions:
         print(term.bold + term.center("Game Rules:")) 
-        print(term.center("- Guess the right four-number combination between 0 - 7"))
+        print(term.center("- Guess the right four-numbers[easy] or six-number[hard] combination between 0 - 7"))
         print(term.center("- After each guess, you'll see feeback:"))
-        print(term.center("     * Correct number(s) in the correct place"))
-        print(term.center("     * Correct number(s) but in the wrong place"))
+        print(term.center("     * Correct number[s] in the correct place"))
+        print(term.center("     * Correct number[s] but in the wrong place"))
         print(term.center("- You have 10 attempts to crack the code"))
         print(term.orange + term.bold(horizontal_border))
         print()
-        # print(term.pink("\nWant to play with six numbers? Click here!"))
-        # print()
     
         if welcome_message:
             print(term.cyan(term.center(welcome_message)))
 
-        print(term.green("\nHit ENTER to play"))
+        print(term.bold("Choose your difficulty level:"))
+        print(term.pink("\n[1]-Easy [4-digit code]"))
+        print(term.purple("\n[2]-Hard [6-digit code]"))    
         print(term.red("\nType Q to end the game early"))
         return
 
@@ -53,45 +53,85 @@ def start_game():
     if not player_name:
         print(term.red("Player name cannot be empty. Exiting...."))
         return
+    # try:
+    #     response = requests.post(f"{API_URL}/game", json={
+    #         "player_name": player_name, 
+    #         "code_length": code_length
+    #     })
+    #     response.raise_for_status()
+    # except requests.exceptions.RequestException as e:
+    #     print(term.red(f"Failed to start game: {e}"))
+    #     return
+
+    # data = response.json()
+    # game_id = data["game_id"]
+    # welcome_message = data.get("message")
+    # attempts_remaining = data["max_attempts"]
+    # print(response.status_code)
+    # print(response.text)
+
+    guesses = []
+    feedbacks = []
+    attempts_remaining = 10 
+    show_instructions = True
+
+    #Show instructions ONCE before starting the game loop
+    draw_ui(term, 
+            guesses,
+            feedbacks, 
+            attempts_remaining, 
+            show_instructions=True, 
+            welcome_message=None
+    )
+
+    #Ask for difficulty selection
+    difficulty_input = ""
+    print(term.green("Enter 1 or 2 and press ENTER to begin"))
+    with term.cbreak():  # read input one key at a time
+        while True:
+            key = term.inkey()
+
+            if key == " ": # Ignore spacebar completely
+                continue
+            elif key == "Q":
+                print(term.red("\nYou've ended the game early. Goodbye!"))
+                exit()
+            elif key.name == "KEY_ENTER":
+                if difficulty_input in ("1","2"):
+                    break
+            else:
+                difficulty_input += key
+                if difficulty_input not in ("1", "2"):
+                    print(term.red("Invalid input: Please enter 1 for Easy or 2 for Hard"))
+                    time.sleep(2)
+                    difficulty_input = ""
+                    print(term.green("Enter 1 or 2 and press ENTER: "), end="", flush=True)
+
+    code_length = 4 if difficulty_input == "1" else 6
+
     try:
-        response = requests.post(f"{API_URL}/game", json={"player_name": player_name})
+        response = requests.post(f"{API_URL}/game", json={
+            "player_name": player_name, 
+            "code_length": code_length
+        })
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
         print(term.red(f"Failed to start game: {e}"))
         return
-
+    
     data = response.json()
     game_id = data["game_id"]
     welcome_message = data.get("message")
     attempts_remaining = data["max_attempts"]
-    print(response.status_code)
-    print(response.text)
 
-    guesses = []
-    feedbacks = []
-    # attempts_remaining = data["max_attempts"]
-    show_instructions = False
+    draw_ui(term, 
+            guesses,
+            feedbacks, 
+            attempts_remaining, 
+            show_instructions=True, 
+            welcome_message=welcome_message
+    )
 
-    #Show instructions ONCE before starting the game loop
-    draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=True, welcome_message=welcome_message)
-
-    #Capture user decision BEFORE entering game loop
-    while True:
-        with term.cbreak():  # read input one key at a time
-            key = term.inkey()
-            
-            if key.name == "KEY_ENTER":
-                break
-            elif key == "Q":
-                print(term.red("\nYou've ended the game early. Goodbye!"))
-                exit()
-            elif key == " ":
-                # Ignore spacebar completely
-                continue
-            else:
-                print(term.red("Invalid input: Please hit ENTER to begin the game"))
-                time.sleep(2)
-                
     #Clear the instructions, new GAME STARTED screen
     print(term.clear())
     width = term.width
