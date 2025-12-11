@@ -6,6 +6,7 @@ from app.random_api import generate_secret_code
 from app.services.game_outcome_service import check_game_outcome
 from app.services.game_service import create_game_session
 from app.services.player_service import get_or_create_player
+from app.utils.difficulty_config import get_difficulty_settings
 from app.utils.feedback import generate_feedback_message
 from app.utils.guess_evaluation import evaluate_guess
 from app.utils.validation import validate_guess_input, InvalidGuessError
@@ -16,8 +17,19 @@ routes = Blueprint('routes', __name__)
 @routes.route("/game", methods = ["POST"])
 def create_game():
     request_body = request.get_json()
+
     raw_name = request_body["player_name"].strip()
-    code_length = request_body.get("code_length")
+
+    difficulty = request_body.get("difficulty", "easy").lower()
+
+    # from utility.difficulty_config import get_difficulty_settings
+    try:
+        settings = get_difficulty_settings(difficulty)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+
+    code_length = settings["code_length"]
+    max_attempts = settings["max_attempts"]
 
     #initialize core game components
     player, is_returning = get_or_create_player(raw_name)
@@ -27,13 +39,24 @@ def create_game():
         message = f"New game created - Good Luck {raw_name}!"
 
     secret_code = generate_secret_code(code_length)
-    game_sesh = create_game_session(player.player_id, secret_code, code_length)
 
+    print(f"Difficulty: {difficulty}")
+    print(f"Settings: {settings}")
+
+    game_sesh = create_game_session(
+        player_id=player.player_id, 
+        secret_code=secret_code, 
+        code_length=code_length,
+        max_attempts=max_attempts,
+        difficulty=difficulty
+    )
+    
     return jsonify({
         "game_id": game_sesh.game_session_id,
         "max_attempts": game_sesh.attempts_remaining,
         "number_range": [0,7],
         "code_length": game_sesh.code_length,
+        "difficulty": difficulty,
         "message": message
     }), 201
 
