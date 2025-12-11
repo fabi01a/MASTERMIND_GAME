@@ -5,6 +5,7 @@ class GameSession(db.Model):
     # timer = pass
     player_id = db.Column(db.Integer, db.ForeignKey('player.player_id'), nullable=False)
     code_length = db.Column(db.Integer,nullable=False)
+    difficulty = db.Column(db.String(10), default='easy', nullable=False)
     secret_code = db.Column(db.JSON, nullable=False)
     attempts_remaining = db.Column(db.Integer,default=10)
     is_over = db.Column(db.Boolean, default=False)
