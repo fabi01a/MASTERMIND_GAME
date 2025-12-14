@@ -103,6 +103,7 @@ def start_game():
     attempts_remaining = data["max_attempts"]
     code_length = data["code_length"]
     welcome_message = data.get("message")
+    show_welcome_once = True
 
     #Clear the instructions, new GAME STARTED screen
     print(term.clear())
@@ -112,6 +113,11 @@ def start_game():
     print(term.orange + term.bold(term.center("GAME STARTED")))
     print(term.orange + term.bold(horizontal_border))
     print()
+
+    if show_welcome_once and welcome_message:
+        print(term.cyan(term.center(welcome_message)))
+        print()
+
     print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
 
     while attempts_remaining > 0:
@@ -135,6 +141,7 @@ def start_game():
         #Send guess to backend
         res = requests.post(f"{API_URL}/game/{game_id}/guess", json={"guess": guess})
         result = res.json()
+        show_welcome_once = False
 
         if res.status_code != 200:
             print(term.red(f"Error: {result.get('error', 'Something went wrong.')}"))
