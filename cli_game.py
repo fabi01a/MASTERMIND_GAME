@@ -51,39 +51,22 @@ def start_game():
 
     guesses = []
     feedbacks = []
-    attempts_remaining = 10 
 
     player_name = input(term.cyan("Enter your player name: ")).strip().lower()
     if not player_name:
         print(term.red("Player name cannot be empty. Exiting...."))
         return
-    
-    temp_code_length = 4
-    try:
-        response = requests.post(f"{API_URL}/game", json={
-            "player_name": player_name, 
-            "code_length": temp_code_length
-        })
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(term.red(f"Failed to start game: {e}"))
-        return
-    
-    data = response.json()
-    game_id = data["game_id"]
-    welcome_message = data.get("message")
-    attempts_remaining = data["max_attempts"]
 
     draw_ui(term, 
             guesses,
             feedbacks, 
-            attempts_remaining, 
-            show_instructions=True, 
-            welcome_message=welcome_message
+            attempts_remaining=10, 
+            show_instructions=True,
     )
 
     difficulty_input = ""
     print(term.green("Enter 1 or 2 and press ENTER to begin"))
+    
     with term.cbreak():  # read input one key at a time
         while True:
             key = term.inkey()
@@ -103,21 +86,23 @@ def start_game():
                     difficulty_input = ""
                     print(term.green("Enter 1 or 2 and press ENTER: "), end="", flush=True)
 
-    code_length = 4 if difficulty_input == "1" else 6
-    if code_length != temp_code_length:
-        try:
-            response = requests.post(f"{API_URL}/game", json={
-                "player_name": player_name, 
-                "code_length": temp_code_length
-            })
-            response.raise_for_status()
-            data = response.json()
-            welcome_message = data.get("message")
-            game_id = data["game_id"]
-            attempts_remaining = data["max_attempts"]
-        except requests.exceptions.RequestException as e:
-            print(term.red(f"Failed to start game: {e}"))
-            return
+    difficulty = "easy" if difficulty_input == "1" else "hard"
+    
+    try:
+        response = requests.post(f"{API_URL}/game", json={
+            "player_name": player_name, 
+            "difficulty": difficulty
+        })
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(term.red(f"Failed to start game: {e}"))
+        return
+    
+    data = response.json()
+    game_id = data["game_id"]
+    attempts_remaining = data["max_attempts"]
+    code_length = data["code_length"]
+    welcome_message = data.get("message")
 
     #Clear the instructions, new GAME STARTED screen
     print(term.clear())
@@ -130,7 +115,7 @@ def start_game():
     print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
 
     while attempts_remaining > 0:
-        guess_input = input(term.yellow("Enter your four-digit guess: "))
+        guess_input = input(term.yellow(f"Enter your {code_length}-digit guess: "))
         
         if guess_input.strip()== "Q":
             print(term.red("\nYou've ended the game early. Goodbye!"))
@@ -139,10 +124,10 @@ def start_game():
         #Basic validation before sending to backend
         try:
             guess = [int(d) for d in guess_input if d.isdigit()]
-            if len(guess) != 4 or any(d < 0 or d > 7 for d in guess):
+            if len(guess) != code_length or any(d < 0 or d > 7 for d in guess):
                 raise ValueError
         except ValueError:
-            print(term.red("Invalid input: Please enter exactly four digits between 0 - 7"))
+            print(term.red(f"Invalid input: Please enter exactly {code_length} digits between 0 - 7"))
             time.sleep(2)
             draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
