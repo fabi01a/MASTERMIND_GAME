@@ -1,4 +1,5 @@
 import requests
+from app.utils.screen_bounce import splash_screen
 from blessed import Terminal
 import time
 
@@ -172,6 +173,10 @@ def start_game():
     print(term.bold(f"\nThanks for playing, {player_name}!"))
     input("Press ENTER to exit.")
 
+def main():
+    splash_screen()
+    start_game()
 
 if __name__ == "__main__":
-    start_game()
+    
+    main()

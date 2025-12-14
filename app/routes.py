@@ -65,6 +65,7 @@ def create_game():
 def player_guess(game_id):
     game = db.session.get(GameSession, game_id)
     player = game.player
+    
     if not game:
         return jsonify({"error": "Game Not Found"}), 404
     if game.is_over:
