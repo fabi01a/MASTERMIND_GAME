@@ -22,6 +22,7 @@ def get_partial_matches(player_guess, secret_code, secret_matched, guess_matched
             if not secret_matched[j] and player_guess[i] == secret_code[j]:
                 correct_numbers += 1
                 secret_matched[j] = True
+                guess_matched[i] = True
                 break
     return correct_numbers
 

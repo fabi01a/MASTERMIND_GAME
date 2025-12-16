@@ -37,15 +37,45 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         print(term.red("\nType Q to end the game early"))
         return
 
-    #If guesses exist, show the table
-    if guesses: 
-        print(term.center("+-----------+--------------+-------------------+------------------------------+"))
-        print(term.center("|  Attempt  |  Your Guess  |  Matching Digits  |  Matching Digits & Position  |"))
-        print(term.center("+-----------+--------------+-------------------+------------------------------+"))
-        for i, (guess, fb) in enumerate(zip(guesses, feedbacks), start=1):
-            print(term.center(f"|   {i:<7} | {str(guess):<11} | {fb['correct_numbers']:^16} | {fb['correct_positions']:^29} |"))
-        print(term.center("+-----------+--------------+-------------------+------------------------------+"))
+    # ==================
+    # TABLE CONFIG
+    # ==================
+    ATTEMPT_W = 11
+    GUESS_W = 18
+    CORRECT_DIGITS_W = 19
+    CORRECT_POS_W = 37
 
+    border = (
+        "+" + "-" * ATTEMPT_W +
+        "+" + "-" * GUESS_W +
+        "+" + "-" * CORRECT_DIGITS_W +
+        "+" + "-" * CORRECT_POS_W + "+"
+    )
+
+    # ==================
+    # TABLE RENDERING
+    # ==================
+    if guesses:
+        print(term.center(border))
+        print(term.center(
+            f"|{'Attempt':^{ATTEMPT_W}}"
+            f"|{'Your Guess':^{GUESS_W}}"
+            f"|{'Correct Digit':^{CORRECT_DIGITS_W}}"
+            f"|{'Correct Digit & Correct Position':^{CORRECT_POS_W}}|"
+        ))
+        print(term.center(border))
+
+        for i, (guess, fb) in enumerate(zip(guesses, feedbacks), start=1):
+            print(term.center(
+                f"|{i:^{ATTEMPT_W}}"
+                f"|{str(guess):^{GUESS_W}}"
+                f"|{fb['correct_numbers']:^{CORRECT_DIGITS_W}}"
+                f"|{fb['correct_positions']:^{CORRECT_POS_W}}|"
+            ))
+
+        print(term.center(border))
+
+    print(term.bold(f"\nAttempts remaining: {attempts_remaining}"))
 
 def start_game():
     print(term.clear())
