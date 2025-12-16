@@ -41,7 +41,7 @@ def splash_screen():
 
             # Draw ball
             draw_x, draw_y = roundxy(x, y)
-            print(term.move_xy(draw_x, draw_y) + term.cyan("█"), end="")
+            print(term.move_xy(draw_x, draw_y) + term.bright_green("█"), end="")
 
             # Draw title (foreground, stable)
             center_y = term.height // 2
@@ -51,7 +51,7 @@ def splash_screen():
             )
             print(
                 term.move_xy(0, center_y + 2)
-                + term.center(term.cyan(subtitle))
+                + term.center(term.bright_green(subtitle))
 )
 
             print(end="", flush=True)
