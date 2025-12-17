@@ -50,8 +50,9 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
     GUESS_W = 18
     CORRECT_DIGITS_W = 19
     CORRECT_POS_W = 37
+    PIPE = term.olivedrab2 + "|" + term.white
 
-    border = (
+    border = term.olivedrab2 + (
         "+" + "-" * ATTEMPT_W +
         "+" + "-" * GUESS_W +
         "+" + "-" * CORRECT_DIGITS_W +
@@ -62,26 +63,35 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
     # TABLE RENDERING
     # ==================
     if guesses:
-        print(term.center(border))
-        print(term.center(
-            f"|{'Attempt':^{ATTEMPT_W}}"
-            f"|{'Your Guess':^{GUESS_W}}"
-            f"|{'Correct Digit':^{CORRECT_DIGITS_W}}"
-            f"|{'Correct Digit & Correct Position':^{CORRECT_POS_W}}|"
-        ))
-        print(term.center(border))
+        print(term.olivedrab2 + term.center(border))
+        
+        header_row = (
+            term.bold + 
+            PIPE + f"{'Attempt':^{ATTEMPT_W}}" +
+            PIPE + f"{'Your Guess':^{GUESS_W}}" +
+            PIPE + f"{'Correct Digit':^{CORRECT_DIGITS_W}}" +
+            PIPE + f"{'Correct Digit & Correct Position':^{CORRECT_POS_W}}" +
+            PIPE
+        )
+        print(term.center(header_row))
+        print(term.olivedrab2 + term.center(border))
 
-        for i, (guess, fb) in enumerate(zip(guesses, feedbacks), start=1):
-            print(term.center(
-                f"|{i:^{ATTEMPT_W}}"
-                f"|{str(guess):^{GUESS_W}}"
-                f"|{fb['correct_numbers']:^{CORRECT_DIGITS_W}}"
-                f"|{fb['correct_positions']:^{CORRECT_POS_W}}|"
-            ))
+        for i, guess in enumerate(guesses, start=1):
+            fb = feedbacks[i - 1]
+            guess_str = " ".join(map(str,guess))
 
-        print(term.center(border))
+            row = (
+                PIPE + f"{i:^{ATTEMPT_W}}" +
+                PIPE + f"{str(guess):^{GUESS_W}}" +
+                PIPE + f"{fb['correct_numbers']:^{CORRECT_DIGITS_W}}" +
+                PIPE + f"{fb['correct_positions']:^{CORRECT_POS_W}}" +
+                PIPE
+            )
 
-    print(term.bold(f"\nAttempts remaining: {attempts_remaining}"))
+            print(term.center(term.white + row))
+            print(term.olivedrab2 + term.center(border))
+
+    print(term.white + term.bold(f"\nAttempts remaining: {attempts_remaining}"))
 
 def start_game():
     print(term.clear())
@@ -182,7 +192,7 @@ def start_game():
         show_welcome_once = False
 
         if res.status_code != 200:
-            print(term.red(f"Error: {result.get('error', 'Something went wrong.')}"))
+            print(term.firebrick1(f"Error: {result.get('error', 'Something went wrong.')}"))
             break
         
         #Appending the guess and feedback
@@ -194,7 +204,7 @@ def start_game():
         draw_ui(term, guesses, feedbacks, attempts_remaining)
 
         #Display custom feedback from backend
-        print(term.cyan(result["message"]))
+        print(term.aquamarine(result["message"]))
 
         # Check win/lose condition
         if result.get("message", "").startswith("🥳"):
@@ -204,10 +214,11 @@ def start_game():
         elif result.get("message", "").startswith("❌"):
             draw_ui(term, guesses, feedbacks, 0)
             print(term.firebrick1(result["message"]))
-            print(term.firebrick1(f"The secret code was: {result['secret_code']}"))
+            print(term.greenyellow(f"The secret code was: {result['secret_code']}"))
             break
 
-    print(term.bold(f"\nThanks for playing, {player_name}!"))
+    print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
+    print()
     input("Press ENTER to exit.")
 
 def main():
