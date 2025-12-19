@@ -111,28 +111,26 @@ def start_game():
             show_instructions=True,
     )
 
-    difficulty_input = ""
-    print()
     print(term.bold + term.bright_green("Enter 1 or 2 and press ENTER to begin"))
     
-    with term.cbreak():  # read input one key at a time
-        while True:
-            key = term.inkey()
-            if key == " ": # Ignore spacebar completely
-                continue
-            elif key == "Q":
-                print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
-                exit()
-            elif key.name == "KEY_ENTER":
-                if difficulty_input in ("1","2"):
-                    break
-            else:
-                difficulty_input += key
-                if difficulty_input not in ("1", "2"):
-                    print(term.firebrick1("Invalid input: Please enter 1 for Easy or 2 for Hard"))
-                    time.sleep(2)
-                    difficulty_input = ""
-                    print(term.green("Enter 1 or 2 and press ENTER: "), end="", flush=True)
+    while True:
+        difficulty_input = blinking_input(
+            "",
+            clear_screen=False,
+            ignore_space_bar=True
+        ).strip()
+    
+        if difficulty_input.upper() == "Q":
+            print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
+            # exit()
+            time.sleep(2)
+            raise SystemExit
+
+        if difficulty_input in ("1","2"):
+            break
+
+        print(term.firebrick1("Invalid input: Please enter 1 for Easy or 2 for Hard"))
+        time.sleep(2)
 
     difficulty = "easy" if difficulty_input == "1" else "hard"
     

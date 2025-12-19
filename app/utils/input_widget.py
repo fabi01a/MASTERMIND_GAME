@@ -2,14 +2,22 @@ import time
 from app.utils.terminal import term
 from blessed import Terminal
 
-def blinking_input(prompt_text:str) -> str:
+def blinking_input(
+        prompt_text:str, 
+        *, 
+        clear_screen: bool = True,
+        ignore_space_bar: bool = False
+) -> str:
     buffer = ""
     cursor_visible = True
     last_blink = time.time()
     BLINK_INTERVAL = 0.5  # seconds
-
     
-    print(term.clear(), end="", flush=True)
+    # print(term.clear(), end="", flush=True)
+    if clear_screen:
+        print(term.clear(), end="", flush=True)
+    else:
+        print()
 
     while True:
         now = time.time()
@@ -31,7 +39,11 @@ def blinking_input(prompt_text:str) -> str:
         print("\r" + line + " " * 10, end="", flush=True)
 
         key = term.inkey(timeout=0.05)
+        
         if not key:
+            continue
+
+        if ignore_space_bar and key == " ":
             continue
 
         if key.name == "KEY_ENTER":
