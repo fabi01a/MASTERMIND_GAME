@@ -17,7 +17,7 @@ def splash_screen():
     x, y = 2, 2
     xs, ys = 0.6, 0.35
 
-    with term.cbreak(), term.hidden_cursor():
+    with term.cbreak():
         print(term.clear())
 
         while True:
