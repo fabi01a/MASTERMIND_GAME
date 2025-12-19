@@ -1,9 +1,9 @@
 import time
+from app.utils.terminal import term
 from math import floor
 from blessed import Terminal
 from .flush_helper import flush_input
 
-term = Terminal()
 
 def roundxy(x, y):
     return int(floor(x)), int(floor(y))
@@ -24,6 +24,7 @@ def splash_screen():
             # Check for ANY key
             key = term.inkey(timeout=0.02)
             if key:
+                print(term.clear(), end="")
                 flush_input()
                 break
 

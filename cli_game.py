@@ -1,10 +1,9 @@
 import requests
 from app.utils.screen_bounce import splash_screen
 from app.utils.input_widget import blinking_input
+from app.utils.terminal import term
 from blessed import Terminal
 import time
-
-term = Terminal()
 
 API_URL = "http://127.0.0.1:5000"
 
@@ -223,10 +222,9 @@ def start_game():
     input("Press ENTER to exit.")
 
 def main():
-    with term.hidden_cursor():
+    with term.fullscreen(), term.cbreak(), term.hidden_cursor():
         splash_screen()
         start_game()
 
 if __name__ == "__main__":
-    
     main()
