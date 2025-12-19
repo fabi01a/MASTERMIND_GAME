@@ -30,7 +30,8 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
         print(term.seagreen1 + term.center("      • How many digits are correct and in the correct place"))
         print(term.springgreen3 + term.center("      • How many digits are correct but in the wrong place"))
         print()
-        print(term.olivedrab1 + term.center(" You have 10 attempts to crack the code"))
+        print(term.olivedrab1 + term.center("The secret code may contain repeated digits"))
+        print(term.white + term.center(" You have 10 attempts to crack the code"))
         print(term.bright_green + term.bold(horizontal_border))
         print()
     

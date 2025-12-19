@@ -8,22 +8,25 @@ def generate_feedback_message(
     ) -> str:
 
     if attempts_remaining == 1:
-        return f"👀   Last chance to crack the code, {player_name}!   👀"
+        return (
+            f"👀  Last chance to crack the code, {player_name}!  👀"
+            f" - You have {attempts_remaining} attempt remaining"
+        )
     
     elif correct_positions and correct_numbers:
         return (
-            f"You have {correct_positions} number(s) in the correct position(s)"
-            f"and {correct_numbers} correct number(s) but in the wrong position(s)"
+            f"You have {correct_positions} number(s) in the correct position(s) "
+            f"and {correct_numbers} correct number(s), but in the wrong position(s) - "
             f"You have {attempts_remaining} attempts remaining"
         )
     elif correct_positions:
-        return (
-            f"You have {correct_positions} number(s) in the correct position(s)"
+        return ( 
+            f"You have {correct_positions} number(s) in the correct position(s) - "
             f"You have {attempts_remaining} attempts remaining"
         )
     elif correct_numbers:
         return (
-            f"You have {correct_numbers} correct number(s) but in the wrong position(s)"
+            f"You have {correct_numbers} correct number(s), but in the wrong position(s) - "
             f"You have {attempts_remaining} attempts remaining"
         )
     else:

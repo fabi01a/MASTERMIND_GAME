@@ -16,7 +16,6 @@ def blinking_input(
     last_blink = time.time()
     BLINK_INTERVAL = 0.5  # seconds
     
-    # print(term.clear(), end="", flush=True)
     if clear_screen:
         print(term.clear(), end="", flush=True)
     else:
