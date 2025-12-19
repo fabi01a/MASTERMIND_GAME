@@ -55,10 +55,7 @@ def blinking_input(
             buffer = buffer[:-1]
 
         elif len(key) == 1 and not key.is_sequence:
-            if key.upper() == "Q":
-                buffer += key
-                continue
-            
+                
             if digits_only and not key.isdigit():
                 continue
 

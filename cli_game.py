@@ -121,7 +121,7 @@ def start_game():
             ignore_space_bar=True
         ).strip()
     
-        if difficulty_input.upper() == "Q":
+        if difficulty_input == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(2)
             raise SystemExit
