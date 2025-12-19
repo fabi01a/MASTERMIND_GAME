@@ -1,12 +1,15 @@
 import time
 from app.utils.terminal import term
 from blessed import Terminal
+from typing import Optional
 
 def blinking_input(
         prompt_text:str, 
         *, 
         clear_screen: bool = True,
-        ignore_space_bar: bool = False
+        ignore_space_bar: bool = False,
+        digits_only: bool = False,
+        max_length: int = None,
 ) -> str:
     buffer = ""
     cursor_visible = True
@@ -53,4 +56,15 @@ def blinking_input(
             buffer = buffer[:-1]
 
         elif len(key) == 1 and not key.is_sequence:
+            if key.upper() == "Q":
+                buffer += key
+                continue
+            
+            if digits_only and not key.isdigit():
+                continue
+
+            if max_length is not None and len(buffer) >= max_length:
+                continue
+            
             buffer += key
+

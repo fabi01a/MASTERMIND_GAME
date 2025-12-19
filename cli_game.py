@@ -122,7 +122,6 @@ def start_game():
     
         if difficulty_input.upper() == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
-            # exit()
             time.sleep(2)
             raise SystemExit
 
@@ -167,7 +166,12 @@ def start_game():
     print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
 
     while attempts_remaining > 0:
-        guess_input = input(term.greenyellow(f"Enter your {code_length}-digit guess: "))
+        guess_input = blinking_input(
+            term.greenyellow(f"Enter your {code_length}-digit guess: "),
+            clear_screen=False,
+            digits_only=True,
+            max_length=code_length
+        )
         
         if guess_input.strip()== "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
