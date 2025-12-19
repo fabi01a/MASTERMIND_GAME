@@ -1,5 +1,6 @@
 import requests
 from app.utils.screen_bounce import splash_screen
+from app.utils.input_widget import blinking_input
 from blessed import Terminal
 import time
 
@@ -99,7 +100,7 @@ def start_game():
     guesses = []
     feedbacks = []
 
-    player_name = input(term.bright_green("Enter your player name: ")).strip().lower()
+    player_name = blinking_input("Enter your player name: ").strip().lower()
     if not player_name:
         print(term.firebrick1("Player name cannot be empty. Exiting...."))
         return
@@ -107,7 +108,7 @@ def start_game():
     draw_ui(term, 
             guesses,
             feedbacks, 
-            attempts_remaining=10, 
+            attempts_remaining=10,
             show_instructions=True,
     )
 
@@ -222,8 +223,9 @@ def start_game():
     input("Press ENTER to exit.")
 
 def main():
-    splash_screen()
-    start_game()
+    with term.hidden_cursor():
+        splash_screen()
+        start_game()
 
 if __name__ == "__main__":
     

@@ -22,7 +22,6 @@ def create_game():
 
     difficulty = request_body.get("difficulty", "easy").lower()
 
-    # from utility.difficulty_config import get_difficulty_settings
     try:
         settings = get_difficulty_settings(difficulty)
     except ValueError as e:

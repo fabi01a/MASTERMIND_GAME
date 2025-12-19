@@ -1,6 +1,7 @@
 import time
 from math import floor
 from blessed import Terminal
+from .flush_helper import flush_input
 
 term = Terminal()
 
@@ -23,6 +24,7 @@ def splash_screen():
             # Check for ANY key
             key = term.inkey(timeout=0.02)
             if key:
+                flush_input()
                 break
 
             # Erase previous ball
