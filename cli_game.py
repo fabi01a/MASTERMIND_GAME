@@ -130,7 +130,16 @@ def start_game():
             break
 
         print(term.firebrick1("Invalid input: Please enter 1 for Easy or 2 for Hard"))
-        time.sleep(2)
+        time.sleep(1)
+
+        draw_ui(term, 
+            guesses,
+            feedbacks, 
+            attempts_remaining=10,
+            show_instructions=True,
+    )
+
+    print(term.bold + term.bright_green("Enter 1 or 2 and press ENTER to begin"))
 
     difficulty = "easy" if difficulty_input == "1" else "hard"
     
