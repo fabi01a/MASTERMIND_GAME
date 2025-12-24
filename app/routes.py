@@ -5,7 +5,6 @@ from app.models.guess import Guess
 from app.random_api import generate_secret_code
 from app.services.game_outcome_service import check_game_outcome
 from app.services.game_service import create_game_session
-from app.services.leaderboard_service import get_top_leaderboard
 from app.services.player_service import get_or_create_player
 from app.utils.difficulty_config import get_difficulty_settings
 from app.utils.feedback import generate_feedback_message
@@ -14,20 +13,6 @@ from app.utils.validation import validate_guess_input, InvalidGuessError
 
 
 routes = Blueprint('routes', __name__)
-
-@routes.route("/leaderboard", methods = ["GET"])
-def leaderboard():
-    results = get_top_leaderboard()
-    leaderboard_data = [
-        {
-            "player_name": row.player_name,
-            "attempts_used": row.attempts_used,
-            "difficulty": row.difficulty
-        }
-        for row in results
-    ]
-    return jsonify(leaderboard_data)
-
 
 @routes.route("/game", methods = ["POST"])
 def create_game():
