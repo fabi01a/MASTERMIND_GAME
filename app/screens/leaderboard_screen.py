@@ -40,8 +40,9 @@ def show_leaderboard():
             f"{entry['attempts_used']:^8} | "
             f"{entry['difficulty'].capitalize():^10}"
         )
-    highlight = (i == 1) #only highlight rank 1
-    styled_row = term.gold(row) if highlight else row
-    print(term.center(styled_row))
-    print(term.center(term.dim + ("-" * len(row))))
+        highlight = (i == 1) #only highlight rank 1
+        styled_row = term.gold(row) if highlight else row
+        print(term.center(styled_row))
+        print(term.center(term.white + ("-" * len(row))))
+        
     input(term.bold("Press ENTER to return to the main menu."))
