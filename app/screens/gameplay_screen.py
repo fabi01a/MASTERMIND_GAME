@@ -108,6 +108,8 @@ def render_instructions(term, guesses, feedbacks, welcome_message=None):
     print(term.bold + term.lawngreen("Enter L to view the leaderboard"))
 
 def start_game():
+    print(term.bold("DEBUG: start_game() entered"))
+
     print(term.clear())
     splash_screen()
 
@@ -133,8 +135,9 @@ def start_game():
         if difficulty_input == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(2)
-            raise SystemExit
-        
+            # raise SystemExit
+            return
+                
         if difficulty_input == "L":
             show_leaderboard()
             render_instructions(term,guesses,feedbacks, welcome_message)
@@ -238,11 +241,18 @@ def start_game():
             time.sleep(4)
             break
 
-    print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
-    print()
+    # print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
+    # print()
 
-    # print(term.bold("\nDisplaying leaderboard..."))
-    # time.sleep(1)
-    show_leaderboard()
+    # print(term.bold("DEBUG: about to show leaderboard"))
+    try:
+        print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
+        print()
+        print(term.bold("DEBUG: about to show leaderboard"))
+        show_leaderboard()
+    except Exception as e:
+        print(term.firebrick1(f"DEBUG: Exception at end of start_game: {e}"))
+    finally:
+        print(term.bold("DEBUG: Reached end of start_game() finally block"))
     
-    input("Press ENTER to exit.")
+

@@ -1,3 +1,5 @@
+
+import time
 from blessed import Terminal
 # from cli_game import start_game
 from app.utils.input_widget import blinking_input
@@ -12,21 +14,35 @@ def main_menu():
         splash_screen()
 
         while True:
-            print(term.clear())
-            print(term.bold(term.center("MAIN MENU")))
-            print(term.center("[1] Start Game"))
-            print(term.center("[2] View Leaderboard"))
-            print(term.center("[Q] Quit"))
+            # print(term.clear())
+            # print(term.bold(term.center("MAIN MENU")))
+            # print(term.center("[1] Start Game"))
+            # print(term.center("[2] View Leaderboard"))
+            # print(term.center("[Q] Quit"))
 
-            choice = blinking_input(term.green("\nChoose an option: ")).strip().lower()
+            # choice = blinking_input(term.green("\nChoose an option: ")).strip().lower()
 
-            if choice == "1":
-                start_game()
-                break  # after game ends, return to menu
-            elif choice == "2":
-                show_leaderboard()
-            elif choice == "q":
-                print(term.firebrick1("Goodbye!"))
-                break
+            # if choice == "1":
+            #     while True:
+            start_game()
+            
+            again = input("Would you like to play again? (Y/N): ").strip().lower()
+            if again == "y":
+                print(term.clear())
+                continue
             else:
-                print(term.red("Invalid input."))
+                print(term.green("Thanks for playing Mastermind - Goodbye!"))
+                time.sleep(4)
+                break  # after game ends, return to menu
+
+            # elif choice == "2":
+            #     show_leaderboard()
+            #     input(term.bold("Press ENTER to return to the menu."))
+
+            # elif choice == "q":
+            #     print(term.firebrick1("Goodbye!"))
+            #     break
+
+            # else:
+            #     print(term.red("Invalid input."))
+
