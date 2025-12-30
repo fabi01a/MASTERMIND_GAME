@@ -45,4 +45,4 @@ def show_leaderboard():
         print(term.center(styled_row))
         print(term.center(term.white + ("-" * len(row))))
         
-    input(term.bold("Press ENTER to return to the main menu."))
+    # input(term.bold("Press ENTER to return to the main menu."))

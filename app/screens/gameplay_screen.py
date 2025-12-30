@@ -229,18 +229,20 @@ def start_game():
         if result.get("message", "").startswith("🥳"):
             draw_ui(term, guesses, feedbacks, attempts_remaining)
             print(term.green(result["message"]))
+            time.sleep(4)
             break
         elif result.get("message", "").startswith("❌"):
             draw_ui(term, guesses, feedbacks, 0)
             print(term.firebrick1(result["message"]))
             print(term.greenyellow(f"The secret code was: {result['secret_code']}"))
+            time.sleep(4)
             break
 
     print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
     print()
 
-    print(term.bold("\nDisplaying leaderboard..."))
-    time.sleep(1)
+    # print(term.bold("\nDisplaying leaderboard..."))
+    # time.sleep(1)
     show_leaderboard()
     
     input("Press ENTER to exit.")
