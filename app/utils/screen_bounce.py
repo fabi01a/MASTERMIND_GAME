@@ -20,12 +20,16 @@ def splash_screen():
     with term.cbreak():
         print(term.clear())
 
+        flush_input()
+
         while True:
             # Check for ANY key
             key = term.inkey(timeout=0.02)
-            if key:
+            if key and not key.is_sequence:
                 print(term.clear(), end="")
-                flush_input()
+                print(term.move_xy(0, 1) + term.red(f"DEBUG key: {repr(key)}"))
+                time.sleep(1)
+
                 break
 
             # Erase previous ball

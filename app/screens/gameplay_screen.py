@@ -121,7 +121,7 @@ def start_game():
     player_name = blinking_input("Enter your player name: ").strip().lower()
     if not player_name:
         print(term.firebrick1("Player name cannot be empty. Exiting...."))
-        return
+        return False
 
     render_instructions(term, guesses, feedbacks)
     
@@ -136,7 +136,7 @@ def start_game():
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(2)
             # raise SystemExit
-            return
+            return False
                 
         if difficulty_input == "L":
             show_leaderboard()
@@ -241,18 +241,11 @@ def start_game():
             time.sleep(4)
             break
 
-    # print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
-    # print()
+    print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
+    print()
 
-    # print(term.bold("DEBUG: about to show leaderboard"))
-    try:
-        print(term.aquamarine + term.bold(f"\nThanks for playing, {player_name}!"))
-        print()
-        print(term.bold("DEBUG: about to show leaderboard"))
-        show_leaderboard()
-    except Exception as e:
-        print(term.firebrick1(f"DEBUG: Exception at end of start_game: {e}"))
-    finally:
-        print(term.bold("DEBUG: Reached end of start_game() finally block"))
+    show_leaderboard()
+    return True
+    
     
 
