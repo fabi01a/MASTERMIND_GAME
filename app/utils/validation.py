@@ -1,11 +1,8 @@
 from app.game_settings import MIN_VALUE, MAX_VALUE
 from app.models.gameSession import GameSession
 from app.models.player import Player
+from app.utils.exceptions import InvalidGuessError
 from app import db
-
-class InvalidGuessError(ValueError):
-    def __init__(self, message):
-        self.message = message
 
 def validate_guess_input(player_guess: list[int], code_length: int = 4):
     if not isinstance(player_guess, list) or len(player_guess) != code_length:

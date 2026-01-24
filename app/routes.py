@@ -4,13 +4,14 @@ from app.models.gameSession import GameSession
 from app.models.guess import Guess
 # from app.random_api import generate_secret_code
 from app.services.game_outcome_service import check_game_outcome
-from app.services.game_service import create_game_session, initialize_new_game
+from app.services.game_service import create_game_session, initialize_new_game, process_guess
 from app.services.leaderboard_service import get_top_leaderboard
 from app.services.player_service import get_or_create_player
 from app.utils.difficulty_config import InvalidDifficultyError, get_difficulty_settings
 from app.utils.feedback import generate_feedback_message
 from app.utils.guess_evaluation import evaluate_guess
 from app.utils.validation import validate_guess_input, InvalidGuessError
+from app.utils.exceptions import GameNotFoundError, GameOverError, InvalidGuessError
 
 
 routes = Blueprint('routes', __name__)
@@ -52,57 +53,19 @@ def create_game():
 
 @routes.route("/game/<game_id>/guess", methods = ["POST"])
 def player_guess(game_id):
-    game = db.session.get(GameSession, game_id)
-    player = game.player
-    
-    if not game:
-        return jsonify({"error": "Game Not Found"}), 404
-    if game.is_over:
-        return jsonify({"error": "Game over - Please start a new game to play again"}), 400
-    
     data = request.get_json() 
-    player_guess = data.get("guess")
-    code_length = game.code_length
+    guess_input = data.get("guess")
 
     try:
-        validate_guess_input(player_guess, game.code_length)
+        result = process_guess(game_id=int(game_id), guess=guess_input)
     except InvalidGuessError as e:
         return jsonify({"error": e.message}), 400
-
-    result = evaluate_guess(player_guess, game.secret_code, code_length)
-    correct_positions = result["correct_positions"]
-    correct_numbers = result["correct_numbers"]
-
-    new_guess = Guess(
-        game_session_id=game.game_session_id,
-        guess_value=player_guess,
-        correct_positions=correct_positions,
-        correct_numbers=correct_numbers
-    )
-
-    db.session.add(new_guess)
-    game.attempts_remaining -= 1
-
-    feedback_message = generate_feedback_message(
-        correct_positions=correct_positions,
-        correct_numbers=correct_numbers,
-        attempts_remaining=game.attempts_remaining,
-        player_name=player.player_name
-    )
-
-    feedback = {
-        "user_guess": player_guess,
-        "correct_positions": correct_positions,
-        "correct_numbers": correct_numbers
-    }
-
-    outcome_response = check_game_outcome(game, correct_positions, feedback)
-    if outcome_response:
-        return jsonify(outcome_response), 200
-
-    return jsonify({
-        "message": feedback_message,
-        "feedback": feedback,
-        "attempts_remaining": game.attempts_remaining
-    }), 200
+    except GameNotFoundError:
+        return jsonify({"error": "Game Not Found"}), 404
+    except GameOverError:
+        return jsonify({"error": "Game Over - Please start a new game"}), 400
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+    
+    return jsonify(result), 200
 
