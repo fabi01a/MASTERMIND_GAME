@@ -2,12 +2,12 @@ from flask import Blueprint, request, jsonify
 from app import db
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
-from app.random_api import generate_secret_code
+# from app.random_api import generate_secret_code
 from app.services.game_outcome_service import check_game_outcome
-from app.services.game_service import create_game_session
+from app.services.game_service import create_game_session, initialize_new_game
 from app.services.leaderboard_service import get_top_leaderboard
 from app.services.player_service import get_or_create_player
-from app.utils.difficulty_config import get_difficulty_settings
+from app.utils.difficulty_config import InvalidDifficultyError, get_difficulty_settings
 from app.utils.feedback import generate_feedback_message
 from app.utils.guess_evaluation import evaluate_guess
 from app.utils.validation import validate_guess_input, InvalidGuessError
@@ -32,39 +32,14 @@ def leaderboard():
 @routes.route("/game", methods = ["POST"])
 def create_game():
     request_body = request.get_json()
-
     raw_name = request_body["player_name"].strip()
-
     difficulty = request_body.get("difficulty", "easy").lower()
 
     try:
-        settings = get_difficulty_settings(difficulty)
-    except ValueError as e:
+        game_sesh, player, message = initialize_new_game(raw_name, difficulty)
+    except InvalidDifficultyError as e:
         return jsonify({"error": str(e)}), 400
 
-    code_length = settings["code_length"]
-    max_attempts = settings["max_attempts"]
-
-    #initialize core game components
-    player, is_returning = get_or_create_player(raw_name)
-    if is_returning:
-        message = f"Welcome back, {raw_name}! New game created - Good Luck!"
-    else:
-        message = f"New game created - Good Luck {raw_name}!"
-
-    secret_code = generate_secret_code(code_length)
-
-    print(f"Difficulty: {difficulty}")
-    print(f"Settings: {settings}")
-
-    game_sesh = create_game_session(
-        player_id=player.player_id, 
-        secret_code=secret_code, 
-        code_length=code_length,
-        max_attempts=max_attempts,
-        difficulty=difficulty
-    )
-    
     return jsonify({
         "game_id": game_sesh.game_session_id,
         "max_attempts": game_sesh.attempts_remaining,
