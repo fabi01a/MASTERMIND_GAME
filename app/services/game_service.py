@@ -6,6 +6,7 @@ from app.models.player import Player
 from app.services.player_service import get_or_create_player
 from app.services.game_outcome_service import check_game_outcome
 from app.utils.difficulty_config import get_difficulty_settings
+from app.utils.exceptions import GameNotFoundError, GameOverError
 from app.utils.secret_code_generation import generate_secret_code
 from app.utils.normalization import normalize_name
 from app.utils.validation import validate_guess_input, InvalidGuessError
