@@ -1,4 +1,5 @@
 import time
+from app.utils.flush_helper import flush_input
 from app.utils.terminal import term
 from blessed import Terminal
 from typing import Optional
@@ -11,6 +12,7 @@ def blinking_input(
         digits_only: bool = False,
         max_length: int = None,
 ) -> str:
+    # flush_input()
     buffer = ""
     cursor_visible = True
     last_blink = time.time()
@@ -21,6 +23,7 @@ def blinking_input(
     else:
         print()
 
+    # with term.hidden_cursor():
     while True:
         now = time.time()
 

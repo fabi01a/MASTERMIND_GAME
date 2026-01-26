@@ -5,6 +5,7 @@ from app.utils.input_widget import blinking_input
 from app.utils.terminal import term
 from blessed import Terminal
 import time
+from app.utils.flush_helper import flush_input
 
 API_URL = "http://127.0.0.1:5000"
 
@@ -107,17 +108,20 @@ def render_instructions(term, guesses, feedbacks, welcome_message=None):
     print(term.bold + term.bright_green("Enter 1 or 2 and press ENTER to begin"))
     print(term.bold + term.lawngreen("Enter L to view the leaderboard"))
 
+
 def start_game():
     print(term.bold("DEBUG: start_game() entered"))
+    splash_screen() #user presses 1 key to move on
+    flush_input() #discard that key immediately
 
-    print(term.clear())
-    splash_screen()
-
-    welcome_message = None
+    print(term.red("DEBUG: Splash done — continue..."))
+    print(term.bold("DEBUG: About to read name..."))
 
     guesses = []
     feedbacks = []
+    welcome_message = None
 
+    # flush_input()
     player_name = blinking_input("Enter your player name: ").strip().lower()
     if not player_name:
         print(term.firebrick1("Player name cannot be empty. Exiting...."))

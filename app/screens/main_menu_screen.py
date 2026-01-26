@@ -11,10 +11,10 @@ from app.utils.flush_helper import flush_input
 term = Terminal()
 
 def main_menu():
-    with term.fullscreen(), term.cbreak(), term.hidden_cursor():
-        splash_screen()
+    # with term.fullscreen(), term.cbreak(), term.hidden_cursor():
+    #     splash_screen()
 
-        while True:
+    while True:
             # print(term.clear())
             # print(term.bold(term.center("MAIN MENU")))
             # print(term.center("[1] Start Game"))
@@ -25,22 +25,22 @@ def main_menu():
 
             # if choice == "1":
             #     while True:
-            played = start_game()
+        played = start_game()
 
-            if not played:
-                print(term.firebrick1("Thanks for playing Mastermind - Goodbye!"))
-                break
-            
-            again = input("Would you like to play again? (Y/N): ").strip().lower()
-            # flush_input()
+        if not played:
+            print(term.firebrick1("Thanks for playing Mastermind - Goodbye!"))
+            break
+        
+        again = input("Would you like to play again? (Y/N): ").strip().lower()
+        # flush_input()
 
-            if again == "y":
-                print(term.clear())
-                continue
-            else:
-                print(term.green("Thanks for playing Mastermind - Goodbye!"))
-                time.sleep(2)
-                break  # after game ends, return to menu
+        if again == "y":
+            print(term.clear())
+            continue
+        else:
+            print(term.green("Thanks for playing Mastermind - Goodbye!"))
+            time.sleep(2)
+            break  # after game ends, return to menu
 
             # elif choice == "2":
             #     show_leaderboard()

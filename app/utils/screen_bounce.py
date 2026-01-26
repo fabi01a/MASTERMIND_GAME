@@ -17,19 +17,18 @@ def splash_screen():
     x, y = 2, 2
     xs, ys = 0.6, 0.35
 
-    with term.cbreak():
+    with term.cbreak(), term.hidden_cursor():
         print(term.clear())
-
         flush_input()
+
+        print(term.red("DEBUG: Inside splash screen - cbreak should be active"))
 
         while True:
             # Check for ANY key
             key = term.inkey(timeout=0.02)
-            if key and not key.is_sequence:
-                print(term.clear(), end="")
-                print(term.move_xy(0, 1) + term.red(f"DEBUG key: {repr(key)}"))
-                time.sleep(1)
-
+            if key:
+                flush_input()
+                print(term.clear())
                 break
 
             # Erase previous ball
@@ -53,7 +52,7 @@ def splash_screen():
             # Draw title (foreground, stable)
             center_y = term.height // 2
             print(
-                term.move_xy(0, center_y)
+                term.move_xy(0, center_y) 
                 + term.bold(term.center(title))
             )
             print(
