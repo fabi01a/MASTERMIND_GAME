@@ -21,8 +21,6 @@ def splash_screen():
         print(term.clear())
         flush_input()
 
-        print(term.red("DEBUG: Inside splash screen - cbreak should be active"))
-
         while True:
             # Check for ANY key
             key = term.inkey(timeout=0.02)
@@ -59,6 +57,5 @@ def splash_screen():
                 term.move_xy(0, center_y + 2)
                 + term.center(term.bright_green(subtitle))
 )
-
             print(end="", flush=True)
 

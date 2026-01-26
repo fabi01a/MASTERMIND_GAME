@@ -110,7 +110,6 @@ def render_instructions(term, guesses, feedbacks, welcome_message=None):
 
 
 def start_game():
-    print(term.bold("DEBUG: start_game() entered"))
     splash_screen() #user presses 1 key to move on
     flush_input() #discard that key immediately
 
@@ -121,7 +120,6 @@ def start_game():
     feedbacks = []
     welcome_message = None
 
-    # flush_input()
     player_name = blinking_input("Enter your player name: ").strip().lower()
     if not player_name:
         print(term.firebrick1("Player name cannot be empty. Exiting...."))
@@ -139,7 +137,6 @@ def start_game():
         if difficulty_input == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(2)
-            # raise SystemExit
             return False
                 
         if difficulty_input == "L":
