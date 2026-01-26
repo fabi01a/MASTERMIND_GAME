@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify
 from app import db
 from app.models.gameSession import GameSession
 from app.models.guess import Guess
-# from app.random_api import generate_secret_code
 from app.services.game_outcome_service import check_game_outcome
 from app.services.game_service import create_game_session, initialize_new_game, process_guess
 from app.services.leaderboard_service import get_top_leaderboard
@@ -12,7 +11,6 @@ from app.utils.feedback import generate_feedback_message
 from app.utils.guess_evaluation import evaluate_guess
 from app.utils.validation import validate_guess_input, InvalidGuessError
 from app.utils.exceptions import GameNotFoundError, GameOverError, InvalidGuessError
-
 
 routes = Blueprint('routes', __name__)
 
