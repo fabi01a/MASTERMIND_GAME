@@ -20,12 +20,13 @@ class GameInitResult:
     message: str
 
 def initialize_new_game(raw_name: str, difficulty: str) -> GameInitResult:
+
     normalized_name = normalize_name(raw_name)
     player, is_returning = get_or_create_player(normalized_name)
 
     settings = get_difficulty_settings(difficulty)
-    code_length = settings.code_length
-    max_attempts = settings.max_attempts
+    code_length = settings["code_length"]
+    max_attempts = settings["max_attempts"]
 
     secret_code = generate_secret_code(code_length)
     game_sesh = create_game_session(

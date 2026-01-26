@@ -33,19 +33,19 @@ def create_game():
     request_body = request.get_json()
     raw_name = request_body["player_name"].strip()
     difficulty = request_body.get("difficulty", "easy").lower()
-
+    
     try:
-        game_sesh, player, message = initialize_new_game(raw_name, difficulty)
+        result = initialize_new_game(raw_name, difficulty)
     except InvalidDifficultyError as e:
         return jsonify({"error": str(e)}), 400
 
     return jsonify({
-        "game_id": game_sesh.game_session_id,
-        "max_attempts": game_sesh.attempts_remaining,
+        "game_id": result.game.game_session_id,
+        "max_attempts": result.game.attempts_remaining,
         "number_range": [0,7],
-        "code_length": game_sesh.code_length,
+        "code_length": result.game.code_length,
         "difficulty": difficulty,
-        "message": message
+        "message": result.message
     }), 201
 
 

@@ -1,4 +1,5 @@
 import requests
+from app.api.api_client import create_game
 from app.screens.leaderboard_screen import show_leaderboard
 from app.utils.screen_bounce import splash_screen
 from app.utils.input_widget import blinking_input
@@ -113,9 +114,6 @@ def start_game():
     splash_screen() #user presses 1 key to move on
     flush_input() #discard that key immediately
 
-    print(term.red("DEBUG: Splash done — continue..."))
-    print(term.bold("DEBUG: About to read name..."))
-
     guesses = []
     feedbacks = []
     welcome_message = None
@@ -155,16 +153,11 @@ def start_game():
     difficulty = "easy" if difficulty_input == "1" else "hard"
     
     try:
-        response = requests.post(f"{API_URL}/game", json={
-            "player_name": player_name, 
-            "difficulty": difficulty
-        })
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
+        data = create_game(player_name, difficulty)
+    except Exception as e:
         print(term.firebrick1(f"Failed to start game: {e}"))
         return
     
-    data = response.json()
     game_id = data["game_id"]
     attempts_remaining = data["max_attempts"]
     code_length = data["code_length"]
