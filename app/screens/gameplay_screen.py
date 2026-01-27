@@ -17,37 +17,16 @@ def start_game():
     splash_screen() #user presses 1 key to move on
     flush_input() #discard that key immediately
 
-    guesses = []
-    feedbacks = []
+    player_name = prompt_player_name()
     welcome_message = None
 
-    player_name = prompt_player_name()
     width = term.width
     horizontal_border = "X" * width
     _render_instructions(welcome_message, horizontal_border)
     
-    while True:
-        difficulty_choice = prompt_difficulty()
-    
-        if difficulty_choice == "Q":
-            print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
-            time.sleep(2)
-            return False
-                
-        if difficulty_choice == "L":
-            show_leaderboard()
-            _render_instructions(welcome_message, horizontal_border)
-            continue
-
-        if difficulty_choice == "invalid":
-            print(term.firebrick1("Invalid input: Please enter 1 for Easy - 2 for Hard - L to view Leaderboard - or Q to Quit game early"))
-            time.sleep(1.5)
-            _render_instructions(welcome_message, horizontal_border)
-            continue
-
-        break
-    
-    difficulty = "easy" if difficulty_choice == "1" else "hard"
+    difficulty = prompt_valid_difficulty(welcome_message, horizontal_border)
+    if difficulty is None:
+        return False
     
     try:
         response_data = create_game(player_name, difficulty)
@@ -56,3 +35,38 @@ def start_game():
         return False
     
     return run_game_loop(player_name, response_data)
+
+
+def prompt_valid_difficulty(welcome_message, horizontal_border):
+    """
+    Handles difficulty selection loop.
+    Returns:
+        "easy" | "hard" if selected
+        None if the user quits
+    """
+    while True:
+        difficulty_choice = prompt_difficulty()
+
+        if difficulty_choice == "Q":
+            print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
+            time.sleep(2)
+            return None
+
+        if difficulty_choice == "L":
+            show_leaderboard()
+            _render_instructions(welcome_message, horizontal_border)
+            continue
+
+        if difficulty_choice == "invalid":
+            print(
+                term.firebrick1(
+                    "Invalid input: Please enter 1 for Easy - 2 for Hard - "
+                    "L to view Leaderboard - or Q to Quit game early"
+                )
+            )
+            time.sleep(1.5)
+            _render_instructions(welcome_message, horizontal_border)
+            continue
+
+        # Valid difficulty
+        return "easy" if difficulty_choice == "1" else "hard"
