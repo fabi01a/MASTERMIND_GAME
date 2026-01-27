@@ -20,21 +20,15 @@ def prompt_difficulty() -> str:
     Prompt the user to enter difficulty level: 1 (easy), 2 (hard), L (leaderboard), or Q (quit).
     Validates input and loops until valid.
     """
-    while True:
-        choice = blinking_input(
-            "",
-            clear_screen=False,
-            ignore_space_bar=True
-        ).strip().upper()
+    choice = blinking_input(
+        "", clear_screen=False, ignore_space_bar=True
+    ).strip().lower()
 
-        if choice in {"1", "2"}:
-            return "easy" if choice == "1" else "hard"
-        
-        if choice == "L":
-            return "leaderboard"
-        
-        if choice == "Q":
-            return "quit"
-
-        print(term.firebrick1("Invalid input: Please enter 1 for Easy - 2 for Hard - L for Leaderboard - or Q to quit."))
-        time.sleep(1)
+    if choice == "q":
+        return "Q"
+    elif choice == "l":
+        return "L"
+    elif choice in ("1", "2"):
+        return choice  # return the actual digit as string
+    else:
+        return "invalid"

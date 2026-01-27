@@ -135,7 +135,13 @@ def start_game():
             render_instructions(term,guesses,feedbacks, welcome_message)
             continue
 
-        difficulty = difficulty_choice
+        if difficulty_choice == "invalid":
+            print(term.firebrick1("Invalid input: Please enter 1 for Easy - 2 for Hard - L to view Leaderboard - or Q to Quit game early"))
+            time.sleep(1.5)
+            render_instructions(term, guesses, feedbacks, welcome_message)
+            continue
+
+        difficulty = "easy" if difficulty_choice == "1" else "hard"
         break
     
     try:
