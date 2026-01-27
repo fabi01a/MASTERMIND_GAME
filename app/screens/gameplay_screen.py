@@ -45,19 +45,19 @@ def prompt_valid_difficulty(welcome_message, horizontal_border):
         None if the user quits
     """
     while True:
-        difficulty_choice = prompt_difficulty()
+        difficulty = prompt_difficulty()
 
-        if difficulty_choice == "Q":
+        if difficulty == "quit":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(2)
             return None
 
-        if difficulty_choice == "L":
+        if difficulty == "leaderboard":
             show_leaderboard()
             _render_instructions(welcome_message, horizontal_border)
             continue
 
-        if difficulty_choice == "invalid":
+        if difficulty == "invalid":
             print(
                 term.firebrick1(
                     "Invalid input: Please enter 1 for Easy - 2 for Hard - "
@@ -69,4 +69,4 @@ def prompt_valid_difficulty(welcome_message, horizontal_border):
             continue
 
         # Valid difficulty
-        return "easy" if difficulty_choice == "1" else "hard"
+        return difficulty

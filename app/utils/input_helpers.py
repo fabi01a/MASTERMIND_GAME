@@ -24,11 +24,13 @@ def prompt_difficulty() -> str:
         "", clear_screen=False, ignore_space_bar=True
     ).strip().lower()
 
-    if choice == "q":
-        return "Q"
+    if choice == "1":
+        return "easy"
+    elif choice == "2":
+        return "hard"
     elif choice == "l":
-        return "L"
-    elif choice in ("1", "2"):
-        return choice  # return the actual digit as string
+        return "leaderboard"
+    elif choice == "q":
+        return "quit"
     else:
         return "invalid"
