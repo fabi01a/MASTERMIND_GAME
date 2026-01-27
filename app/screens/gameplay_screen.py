@@ -7,6 +7,7 @@ from app.utils.terminal import term
 from blessed import Terminal
 import time
 from app.utils.flush_helper import flush_input
+from app.utils.input_helpers import prompt_player_name, prompt_difficulty
 
 API_URL = "http://127.0.0.1:5000"
 
@@ -118,50 +119,35 @@ def start_game():
     feedbacks = []
     welcome_message = None
 
-    player_name = blinking_input("Enter your player name: ").strip().lower()
-    if not player_name:
-        print(term.firebrick1("Player name cannot be empty. Exiting...."))
-        return False
-
+    player_name = prompt_player_name()
     render_instructions(term, guesses, feedbacks)
     
     while True:
-        difficulty_input = blinking_input(
-            "",
-            clear_screen=False,
-            ignore_space_bar=True
-        ).strip()
+        difficulty_choice = prompt_difficulty()
     
-        if difficulty_input == "Q":
+        if difficulty_choice == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(2)
             return False
                 
-        if difficulty_input == "L":
+        if difficulty_choice == "L":
             show_leaderboard()
             render_instructions(term,guesses,feedbacks, welcome_message)
             continue
 
-        if difficulty_input in ("1","2"):
-            break
-
-        print(term.firebrick1("Invalid input: Please enter 1 for Easy - 2 for Hard - or L for Leaderboard"))
-        time.sleep(1)
-
-        render_instructions(term, guesses, feedbacks, welcome_message)
-
-    difficulty = "easy" if difficulty_input == "1" else "hard"
+        difficulty = difficulty_choice
+        break
     
     try:
-        data = create_game(player_name, difficulty)
+        response_data = create_game(player_name, difficulty)
     except Exception as e:
         print(term.firebrick1(f"Failed to start game: {e}"))
-        return
+        return False
     
-    game_id = data["game_id"]
-    attempts_remaining = data["max_attempts"]
-    code_length = data["code_length"]
-    welcome_message = data.get("message")
+    game_id = response_data["game_id"]
+    attempts_remaining = response_data["max_attempts"]
+    code_length = response_data["code_length"]
+    welcome_message = response_data.get("message", "")
     show_welcome_once = True
 
     #Clear the instructions, new GAME STARTED screen
