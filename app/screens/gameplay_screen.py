@@ -37,13 +37,8 @@ def start_game():
     return run_game_loop(player_name, response_data)
 
 
+#Handles difficulty selection loop.
 def prompt_valid_difficulty(welcome_message, horizontal_border):
-    """
-    Handles difficulty selection loop.
-    Returns:
-        "easy" | "hard" if selected
-        None if the user quits
-    """
     while True:
         difficulty = prompt_difficulty()
 
@@ -68,5 +63,4 @@ def prompt_valid_difficulty(welcome_message, horizontal_border):
             _render_instructions(welcome_message, horizontal_border)
             continue
 
-        # Valid difficulty
         return difficulty
