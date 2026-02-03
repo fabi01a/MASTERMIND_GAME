@@ -49,19 +49,18 @@ def prompt_valid_difficulty(welcome_message, horizontal_border):
             time.sleep(2)
             return None
 
-        if difficulty == "leaderboard":
-            show_leaderboard()
-            _render_instructions(welcome_message, horizontal_border)
-            continue
-
-        if difficulty == "invalid":
-            print(
+        if difficulty in ["leaderboard", "invalid"]:
+            if difficulty == "leaderboard":
+                show_leaderboard()
+            else:
+                print(
                 term.firebrick1(
                     "Invalid input: Please enter 1 for Easy - 2 for Hard - "
                     "L to view Leaderboard - or Q to Quit game early"
                 )
             )
-            time.sleep(1.5)
+                time.sleep(2)
+
             _render_instructions(welcome_message, horizontal_border)
             continue
 
