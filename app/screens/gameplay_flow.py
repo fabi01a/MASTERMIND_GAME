@@ -3,6 +3,7 @@ import requests
 from app.api.api_client import send_guess
 from app.utils.input_widget import blinking_input
 from app.screens.render_ui import draw_ui
+from app.utils.ui_helpers import render_game_started_screen
 from app.utils.terminal import term
 from app.utils.validation import validate_guess_input
 from app.utils.exceptions import InvalidGuessError
@@ -10,6 +11,7 @@ from app.utils.game_helpers import process_guess_feedback
 from app.utils.game_outcome_utils import interpret_game_outcome
 from app.services.game_outcome_service import check_game_outcome
 from app.utils.handle_game_flow_helpers import handle_game_over
+
 # from app.utils.leaderboard import show_leaderboard
 
 
@@ -24,7 +26,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
     guesses = []
     feedbacks = []
 
-    _render_game_started_screen(welcome_message, attempts_remaining)
+    render_game_started_screen(welcome_message, attempts_remaining)
 
     while attempts_remaining > 0:
         guess_input = blinking_input(
@@ -36,7 +38,14 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
 
         if guess_input.upper() == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
-            break
+            time.sleep(1.5)
+            handle_game_over(player_name)
+            return False 
+        
+        if not guess_input:
+            print(term.firebrick1("You must enter a guess or type Q to quit."))
+            time.sleep(1.5)
+            continue
 
         # === VALIDATE INPUT ===
         try:
@@ -78,19 +87,3 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
     
     handle_game_over(player_name)
 
-
-def _render_game_started_screen(welcome_message: str, attempts_remaining: int):
-    print(term.clear())
-    width = term.width
-    horizontal_border = "X" * width
-
-    print(term.bright_green + term.bold(horizontal_border))
-    print(term.bright_green + term.bold(term.center("GAME STARTED")))
-    print(term.bright_green + term.bold(horizontal_border))
-    print()
-
-    if welcome_message:
-        print(term.greenyellow(term.center(welcome_message)))
-        print()
-
-    print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
