@@ -1,5 +1,6 @@
 import requests
 from blessed import Terminal
+from app.utils.ui_helpers import render_screen_title
 
 API_URL = "http://127.0.0.1:5000"
 term = Terminal()
@@ -22,12 +23,8 @@ def show_leaderboard():
         return
 
     horizontal_border = "X" * term.width
-    title = "🏆 MASTERMIND LEADERBOARD 🏆"
+    render_screen_title(term,"🏆 MASTERMIND LEADERBOARD 🏆")
     
-    print(term.bright_green + term.bold(horizontal_border))
-    print(term.olivedrab1 + term.bold + term.center(title))
-    print(term.bright_green + term.bold(horizontal_border))
-
     header = "Rank | Player       | Attempts | Difficulty"
     divider = "-----+--------------+----------+-----------"
     print(term.bold + term.center(header))

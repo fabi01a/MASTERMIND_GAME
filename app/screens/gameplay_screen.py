@@ -3,7 +3,6 @@ from app.api.api_client import create_game
 from app.screens.leaderboard_screen import show_leaderboard
 from app.screens.render_ui import draw_ui, _render_instructions
 from app.utils.screen_bounce import splash_screen
-from app.utils.input_widget import blinking_input
 from app.utils.terminal import term
 from blessed import Terminal
 import time

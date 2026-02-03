@@ -9,7 +9,7 @@ from app.utils.difficulty_config import get_difficulty_settings
 from app.utils.exceptions import GameNotFoundError, GameOverError
 from app.utils.secret_code_generation import generate_secret_code
 from app.utils.normalization import normalize_name
-from app.utils.validation import validate_guess_input, InvalidGuessError
+from app.utils.validation import validate_guess_input
 from app.utils.feedback import generate_feedback_message
 from app.utils.guess_evaluation import evaluate_guess
 

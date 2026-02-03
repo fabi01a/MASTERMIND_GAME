@@ -1,5 +1,4 @@
 import time
-from app.utils.flush_helper import flush_input
 from app.utils.terminal import term
 from blessed import Terminal
 from typing import Optional

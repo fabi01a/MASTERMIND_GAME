@@ -6,10 +6,8 @@ from app.services.game_outcome_service import check_game_outcome
 from app.services.game_service import create_game_session, initialize_new_game, process_guess
 from app.services.leaderboard_service import get_top_leaderboard
 from app.services.player_service import get_or_create_player
-from app.utils.difficulty_config import InvalidDifficultyError, get_difficulty_settings
-from app.utils.feedback import generate_feedback_message
+from app.utils.difficulty_config import InvalidDifficultyError
 from app.utils.guess_evaluation import evaluate_guess
-from app.utils.validation import validate_guess_input, InvalidGuessError
 from app.utils.exceptions import GameNotFoundError, GameOverError, InvalidGuessError
 
 routes = Blueprint('routes', __name__)

@@ -1,17 +1,13 @@
 from app.utils.terminal import term
+from app.utils.ui_helpers import render_screen_title, generate_horizontal_border
 
 def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False, welcome_message=None):
     print(term.clear())
-    width = term.width
-    horizontal_border = "X" * width
-
-    # === HEADER ===
-    print(term.bright_green + term.bold(horizontal_border))
-    print(term.olivedrab1 + term.bold(term.center("MASTERMIND - THE GAME")))
-    print(term.bright_green + term.bold(horizontal_border))
+    render_screen_title(term, "MASTERMIND - THE GAME")
 
     # === INSTRUCTIONS VIEW ===
     if show_instructions:
+        horizontal_border = generate_horizontal_border(term)
         _render_instructions(welcome_message, horizontal_border)
         return
 
@@ -33,7 +29,7 @@ def _render_instructions(welcome_message, horizontal_border):
     print()
     print(term.olivedrab1 + term.center("The secret code may contain repeated digits"))
     print(term.white + term.center(" You have 10 attempts to crack the code"))
-    print(term.bright_green + term.bold(horizontal_border))
+    horizontal_border = generate_horizontal_border(term)
     print()
 
     if welcome_message:

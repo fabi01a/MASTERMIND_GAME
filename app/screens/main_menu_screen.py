@@ -1,10 +1,7 @@
 import time
 from blessed import Terminal
-from app.utils.input_widget import blinking_input
-from app.utils.screen_bounce import splash_screen
 from app.screens.leaderboard_screen import show_leaderboard
 from app.screens.gameplay_screen import start_game
-from app.utils.flush_helper import flush_input
 
 term = Terminal()
 
