@@ -1,4 +1,3 @@
-from app.screens.gameplay_screen import start_game
 from app.utils.flush_helper import flush_input
 from app.screens.main_menu_screen import main_menu
 from blessed import Terminal

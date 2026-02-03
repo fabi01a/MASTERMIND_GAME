@@ -6,6 +6,8 @@ from app.screens.gameplay_screen import start_game
 term = Terminal()
 
 def main_menu():
+    print("DEBUG: Back in main_menu()")
+
     while True:
         played = start_game()
 

@@ -3,15 +3,13 @@ from app.screens.leaderboard_screen import show_leaderboard
 from app.utils.input_widget import blinking_input
 
 def handle_game_over(player_name: str) -> bool:
+    print("DEBUG: Entered handle_game_over()")
+
     show_leaderboard()
 
     while True:
         print()
-        replay = blinking_input(
-            term.bold_green("\nWould you like to play again? (Y/N): "),
-            clear_screen=False,
-            ignore_space_bar=True
-        ).strip().lower()
+        replay = input("\nWould you like to play again? (Y/N): ").strip().lower()
 
         if replay == "y":
             return True
