@@ -59,8 +59,9 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             print(term.clear())
             draw_ui(term, guesses, feedbacks, attempts_remaining)
             print(term.firebrick1(f"Invalid input: {e}"))
-            time.sleep(2)
-            # draw_ui(term, guesses, feedbacks, attempts_remaining)
+            time.sleep(1.5)
+            print(term.clear())
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
 
         # === SEND TO BACKEND ===
