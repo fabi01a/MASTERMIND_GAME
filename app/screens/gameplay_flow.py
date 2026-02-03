@@ -32,7 +32,6 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         guess_input = blinking_input(
             term.greenyellow(f"Enter your {code_length}-digit guess: "),
             clear_screen=False,
-            digits_only=True,
             max_length=code_length
         ).strip()
 
@@ -43,8 +42,12 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             return False 
         
         if not guess_input:
+            print(term.clear())
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
             print(term.firebrick1("You must enter a guess or type Q to quit."))
             time.sleep(1.5)
+            print(term.clear())
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
 
         # === VALIDATE INPUT ===
@@ -52,9 +55,11 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             guess = [int(d) for d in guess_input if d.isdigit()]
             validate_guess_input(guess, code_length)
         except (ValueError, InvalidGuessError) as e:
+            print(term.clear())
+            draw_ui(term, guesses, feedbacks, attempts_remaining)
             print(term.firebrick1(f"Invalid input: {e}"))
             time.sleep(2)
-            draw_ui(term, guesses, feedbacks, attempts_remaining)
+            # draw_ui(term, guesses, feedbacks, attempts_remaining)
             continue
 
         # === SEND TO BACKEND ===
