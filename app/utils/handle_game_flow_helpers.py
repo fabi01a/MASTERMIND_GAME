@@ -1,10 +1,10 @@
+import time
+from app.screens.render_ui import draw_ui
 from app.utils.terminal import term
 from app.screens.leaderboard_screen import show_leaderboard
 from app.utils.input_widget import blinking_input
 
 def handle_game_over(player_name: str) -> bool:
-    print("DEBUG: Entered handle_game_over()")
-
     show_leaderboard()
 
     while True:
@@ -19,3 +19,12 @@ def handle_game_over(player_name: str) -> bool:
         else:
             print(term.move_up + term.clear_eol, end="")
             print(term.firebrick1("Invalid input. Please enter Y or N."))
+
+
+def display_error_and_redraw(error_message: str, guesses: list, feedbacks: list, attempts_remaining: int, delay: float = 1.5):
+    print(term.clear())
+    draw_ui(term, guesses, feedbacks, attempts_remaining)
+    print(term.firebrick1(error_message))
+    time.sleep(delay)
+    print(term.clear())
+    draw_ui(term, guesses, feedbacks, attempts_remaining)

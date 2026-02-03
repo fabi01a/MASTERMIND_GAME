@@ -10,7 +10,7 @@ from app.utils.exceptions import InvalidGuessError
 from app.utils.game_helpers import process_guess_feedback
 from app.utils.game_outcome_utils import interpret_game_outcome
 from app.services.game_outcome_service import check_game_outcome
-from app.utils.handle_game_flow_helpers import handle_game_over
+from app.utils.handle_game_flow_helpers import handle_game_over, display_error_and_redraw
 
 # from app.utils.leaderboard import show_leaderboard
 
@@ -43,12 +43,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             break
         
         if not guess_input:
-            print(term.clear())
-            draw_ui(term, guesses, feedbacks, attempts_remaining)
-            print(term.firebrick1("You must enter a guess or type Q to quit."))
-            time.sleep(1.5)
-            print(term.clear())
-            draw_ui(term, guesses, feedbacks, attempts_remaining)
+            display_error_and_redraw("Invalid Input: You must enter a number between 0 - 7 or type Q to quit", guesses, feedbacks, attempts_remaining)
             continue
 
         # === VALIDATE INPUT ===
@@ -56,12 +51,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             guess = [int(d) for d in guess_input if d.isdigit()]
             validate_guess_input(guess, code_length)
         except (ValueError, InvalidGuessError) as e:
-            print(term.clear())
-            draw_ui(term, guesses, feedbacks, attempts_remaining)
-            print(term.firebrick1(f"Invalid input: {e}"))
-            time.sleep(1.5)
-            print(term.clear())
-            draw_ui(term, guesses, feedbacks, attempts_remaining)
+            display_error_and_redraw("Invalid Input: You must enter a number between 0 - 7 or type Q to quit", guesses, feedbacks, attempts_remaining)
             continue
 
         # === SEND TO BACKEND ===
