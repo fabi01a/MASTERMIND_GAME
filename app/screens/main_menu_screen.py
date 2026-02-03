@@ -12,14 +12,3 @@ def main_menu():
         if not played:
             print(term.firebrick1("Thanks for playing Mastermind - Goodbye!"))
             break
-        
-        again = input("Would you like to play again? (Y/N): ").strip().lower()
-
-        if again == "y":
-            print(term.clear())
-            continue
-        else:
-            print(term.green("Thanks for playing Mastermind - Goodbye!"))
-            time.sleep(2)
-            break  # after game ends, return to menu
-

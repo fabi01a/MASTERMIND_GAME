@@ -38,8 +38,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         if guess_input.upper() == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(1.5)
-            handle_game_over(player_name)
-            return False 
+            return handle_game_over(player_name)
         
         if not guess_input:
             print(term.clear())
@@ -90,5 +89,5 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             time.sleep(4)
             break
     
-    handle_game_over(player_name)
+    return handle_game_over(player_name)
 

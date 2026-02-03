@@ -13,28 +13,31 @@ from app.screens.gameplay_flow import run_game_loop
 
 
 def start_game():
-    splash_screen() #user presses 1 key to move on
-    flush_input() #discard that key immediately
+    while True:
+        splash_screen() #user presses 1 key to move on
+        flush_input() #discard that key immediately
 
-    player_name = prompt_player_name()
-    welcome_message = None
+        player_name = prompt_player_name()
+        welcome_message = None
 
-    width = term.width
-    horizontal_border = "X" * width
-    _render_instructions(welcome_message, horizontal_border)
-    
-    difficulty = prompt_valid_difficulty(welcome_message, horizontal_border)
-    if difficulty is None:
-        return False
-    
-    try:
-        response_data = create_game(player_name, difficulty)
-    except Exception as e:
-        show_game_creation_error(e)
-        return False
-    
-    return run_game_loop(player_name, response_data)
-
+        width = term.width
+        horizontal_border = "X" * width
+        _render_instructions(welcome_message, horizontal_border)
+        
+        difficulty = prompt_valid_difficulty(welcome_message, horizontal_border)
+        if difficulty is None:
+            return False
+        
+        try:
+            response_data = create_game(player_name, difficulty)
+        except Exception as e:
+            show_game_creation_error(e)
+            return False
+        
+        play_again = run_game_loop(player_name, response_data)
+        if not play_again:
+            return False
+            
 
 #Handles difficulty selection loop.
 def prompt_valid_difficulty(welcome_message, horizontal_border):
