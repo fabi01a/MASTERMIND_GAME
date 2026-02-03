@@ -36,7 +36,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             max_length=code_length
         ).strip()
 
-        if guess_input.upper() == "Q":
+        if guess_input == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(1.5)
             quit_early = True

@@ -22,15 +22,15 @@ def prompt_difficulty() -> str:
     """
     choice = blinking_input(
         "", clear_screen=False, ignore_space_bar=True
-    ).strip().lower()
+    ).strip()
 
     if choice == "1":
         return "easy"
     elif choice == "2":
         return "hard"
-    elif choice == "l":
+    elif choice == "L":
         return "leaderboard"
-    elif choice == "q":
+    elif choice == "Q":
         return "quit"
     else:
         return "invalid"
