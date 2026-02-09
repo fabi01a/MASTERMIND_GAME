@@ -1,7 +1,7 @@
 import requests
 from app.api.api_client import create_game
 from app.screens.leaderboard_screen import show_leaderboard
-from app.screens.render_ui import draw_ui, _render_instructions
+from app.screens.render_ui import draw_ui, render_instructions
 from app.utils.screen_bounce import splash_screen
 from app.utils.terminal import term
 from blessed import Terminal
@@ -22,7 +22,7 @@ def start_game():
 
         width = term.width
         horizontal_border = "X" * width
-        _render_instructions(welcome_message, horizontal_border)
+        render_instructions(welcome_message, horizontal_border)
         
         difficulty = prompt_valid_difficulty(welcome_message, horizontal_border)
         if difficulty is None:
@@ -61,7 +61,7 @@ def prompt_valid_difficulty(welcome_message, horizontal_border):
             )
                 time.sleep(2)
 
-            _render_instructions(welcome_message, horizontal_border)
+            render_instructions(welcome_message, horizontal_border)
             continue
 
         return difficulty
