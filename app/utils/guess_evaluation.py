@@ -1,6 +1,3 @@
-from app.models.gameSession import GameSession
-
-
 def get_exact_matches(player_guess, secret_code, code_length):
     secret_matched = [False] * code_length
     guess_matched = [False] * code_length
