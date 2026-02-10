@@ -1,6 +1,6 @@
 from app import db
 from dataclasses import dataclass
-from app.models.gameSession import GameSession
+from app.models.game_session import GameSession
 from app.models.guess import Guess
 from app.models.player import Player
 from app.services.player_service import get_or_create_player

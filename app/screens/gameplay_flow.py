@@ -7,10 +7,9 @@ from app.utils.ui_helpers import render_game_started_screen
 from app.utils.terminal import term
 from app.utils.validation import validate_guess_input
 from app.utils.exceptions import InvalidGuessError
-from app.utils.game_helpers import process_guess_feedback
 from app.utils.game_outcome_utils import interpret_game_outcome
 from app.services.game_outcome_service import check_game_outcome
-from app.utils.handle_game_flow_helpers import handle_game_over, display_error_and_redraw
+from app.utils.handle_game_flow_helpers import handle_game_over, display_error_and_redraw, process_guess_feedback
 
 
 def run_game_loop(player_name: str, game_data: dict) -> bool:

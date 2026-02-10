@@ -1,7 +1,8 @@
 import pytest
 from app import create_app
-from app.models.gameSession import GameSession
+from app.models.game_session import GameSession
 from app.models.player import Player
+from app import db
 
 TEST_PLAYER_NAME = "TestPlayer"
 
@@ -68,9 +69,6 @@ def test_invalid_guess_type(client, bad_guess):
 def test_winning_game(client):
     game_id = create_test_game(client)
 
-    from app.models.gameSession import GameSession
-    from app import db
-
     game = db.session.get(GameSession, game_id)
     game.secret_code = [2,4,0,6]
     db.session.commit()
@@ -91,7 +89,7 @@ def test_winning_game(client):
 def test_losing_game(client):
     game_id = create_test_game(client)
 
-    from app.models.gameSession import GameSession
+    from app.models.game_session import GameSession
     from app import db
     game = db.session.get(GameSession, game_id)
     game.secret_code = [2,4,0,6]
@@ -114,7 +112,7 @@ def test_losing_game(client):
 def test_guess_after_game_over(client):
     game_id = create_test_game(client)
 
-    from app.models.gameSession import GameSession
+    from app.models.game_session import GameSession
     from app import db
 
     game = db.session.get(GameSession, game_id)

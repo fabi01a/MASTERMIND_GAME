@@ -1,5 +1,5 @@
 from app.game_settings import MIN_VALUE, MAX_VALUE
-from app.models.gameSession import GameSession
+from app.models.game_session import GameSession
 from app.models.player import Player
 from app.utils.exceptions import InvalidGuessError
 from app import db
