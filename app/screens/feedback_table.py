@@ -1,5 +1,6 @@
 from app.utils.terminal import term
-from app.utils.ui_helpers import render_screen_title, generate_horizontal_border
+from app.utils.ui_helpers import generate_horizontal_border
+
 
 def render_feedback_table(guesses, feedbacks, attempts_remaining):
     config = _table_config()

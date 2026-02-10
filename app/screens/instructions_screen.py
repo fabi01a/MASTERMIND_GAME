@@ -3,8 +3,11 @@ from app.utils.ui_helpers import render_screen_title, generate_horizontal_border
 
 
 def render_instructions(welcome_message, horizontal_border):
-    print(term.bold + term.center("Game Rules:"))
-    print(term.bold + term.center("-----------"))
+    print(term.clear())
+    render_screen_title(term, "👾 MASTERMIND 👾")
+    print()
+    print(term.center(term.bold("Game Rules:")))
+    print(term.center(term.bold("-----------")))
     print(term.center(" Guess the secret number code"))
     print(term.olivedrab1 + term.center(" Use only numbers from 0 to 7"))
     print(term.palevioletred1 + term.center("    • [Easy] level uses 4 digits"))
@@ -13,8 +16,8 @@ def render_instructions(welcome_message, horizontal_border):
     print(term.white + term.center(" After each guess, the game will tell you:"))
     print(term.seagreen1 + term.center("      • How many digits are correct and in the correct place"))
     print(term.springgreen3 + term.center("      • How many digits are correct but in the wrong place"))
-    print()
-    print(term.olivedrab1 + term.center("The secret code may contain repeated digits"))
+    print()                                     
+    print(term.olivedrab1 + term.center("→ The secret code may contain repeated digits"))
     print(term.white + term.center(" You have 10 attempts to crack the code"))
     print()
 
