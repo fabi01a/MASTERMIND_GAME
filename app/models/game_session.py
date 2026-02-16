@@ -33,7 +33,3 @@ class GameSession(db.Model):
             f"player_id={self.player_id} "
             f"difficulty={self.difficulty}>"
         )
-
-
-def test():
-    print("hello")
