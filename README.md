@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ⚠️ This branch contains the original monolithic implementation before refactoring.
 
 
@@ -19,93 +20,157 @@ https://github.com/user-attachments/assets/a0448560-70fa-4961-8a99-ce4184d063c3
 
 
 
+=======
+# 👾 MASTERMIND 👾 
+>>>>>>> 66aaa0ba85e73ffb9ab74cb0653b070fbeb55c71
 
-
----
-
-## 🧐 HOW IT WORKS
-
-- The computer generates a secret 4-number code
-- After each guess, the game will provide feedback:
-    - ✅ Correct number(s) in the correct position(s)
-    -  🔁 Correct number(s) but in their wrong position(s)
-    - ❌ Incorrect number(s) chosen
-- The game tracks and displays the player's guesses in a clean terminal-based UI
-- The player has 10 attempts to guess the correct 4-number sequence
-- The game ends when the player wins, runs out of attempts, or chooses to end the game early
+A full-stack, terminal-based implementation of the classic Mastermind game, built with a Flask backend and a Blessed-powered CLI frontend. The project emphasizes clean architecture, predictable state transitions, and separation of concerns.
 
 ---
 
-## 🛠️ REQUIREMENTS:
-This app is built with Python 3.11.4 and requires the following libraries:
-- [`requests`](https://pypi.org/project/requests/)
-- [`flask`](https://pypi.org/project/Flask/)
-- [`pytest`](https://pypi.org/project/pytest/) (for testing)
-- [`blessed`](https://pypi.org/project/blessed/) (for CLI rendering)
-- `random`, `time` (built-in modules)
+## ❎ Why This Project?
+
+This project was built to practice **full-stack** system design beyond CRUD applications, with a focus on:  
+
+✦ Separating UI rendering, game flow, services, and persistence layers  
+✦ Designing clear game state transitions (in-progress, win, loss)  
+✦ Managing real-time terminal UI interactions  
+✦ Refactoring toward modularity and single responsibility  
+✦ Treating the CLI as a client to a backend API  
 
 ---
 
-## 📦 INSTALLATION
-
-1. **Clone the repo:**
-    ```bash
-    git clone https://github.com/fabi01a/MASTERMIND_GAME.git
-    cd MASTERMIND_GAME
-    ```
-
-2. **Set up and activate your virtual environment:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
-
-3. **Install the dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Start the game:**
-   ```bash
-   python cli_game.py
-   ```
-
-You will be greeted with instructions in your terminal. Type in your 4-number guess or type QUIT to end the game at any time
+## ❎ Tech Stack
+✦ **Python**  
+✦ **Flask** (REST API)  
+✦ **SQLAlchemy** (ORM)  
+✦ **Blessed** (terminal UI rendering)  
+✦ **SQLite** (development database)  
+✦ **pytest** (testing)  
 
 ---
 
-## 💫 EXTENSIONS & ENHANCEMENTS
+## ❎ Architectural Overview
 
-In addition to the core functionality, this project includes:
+The application follows a layered architecture:
 
-- 🤩 **Dynamic UI:** Terminal UI updates on each guess with a displayed chart tracking the history of previous attempts
-- 🥷 **Fallback Logic:** If the external API is not available, the game uses Python's built-in random as a fallback
-- 🏓 **Custom Feedback:** Player receives personalized feedback after each guess
-- ✌🏼**Early Exit Support:** Quit before starting or anytime during the game
+✦ **CLI Frontend**  
+    `✧` Renders screens and captures user input  
+    `✧` Does not contain game logic or state inference  
+    
+✦ **Game Flow / Controllers**  
+    `✧` Orchestrate user interaction and screen transitions  
+    
+✦ **Services**  
+    `✧` Handle game state transitions and business rules  
+    
+✦ **Models**  
+    `✧` Represent persisted game state  
+    
+✦ **API Client**    
+    `✧` Abstracts HTTP communication between frontend and backend  
+
+
+✦ Game win/loss logic lives entirely on the backend.  
+✦ The frontend only interprets backend responses.  
 
 ---
 
-## 🧪 RUNNING TESTS
+## ❎ Notable Features & Design Choices
 
-From the project root, run:
+✦ Backend-driven game state and win/loss logic  
+✦ Clean terminal UI with a dynamically updating guess table  
+✦ Input validation centralized in reusable utilities  
+✦ Graceful fallback if the external random number API is unavailable  
+✦ Early exit supported at multiple stages of gameplay  
 
-```bash
-    pytest
+---
+
+## ❎  Running The Project Locally
+
+### 1. Clone The Repository
+ ```bash
+$ git clone https://github.com/fabi01a/MASTERMIND_GAME.git
+$ cd MASTERMIND_GAME
 ```
 
-This test suite covers:
-- Game creation
-- Valid / Invalid guesses
-- Win / Loss scenarios
-- Input edgecases
-- Post-game restrictions
+### 2. Create & Activate A Virtual Environment
+```bash
+$ python3 -m venv venv
+$ source venv/bin/activate
+```
 
-Tests are located in tests/test_routes.py
+### 3. Install Dependencies
+```bash
+$ pip install -r requirements.txt
+```
+
+### 4. Start The Backend Server
+```bash
+$ flask run
+```
+
+### 5.Start The CLI Game (in a separate terminal)
+```bash
+$ python cli_game.py
+```
 
 ---
 
-## 📝 NOTES
 
-- The game uses /game and /game/<game_id>/guess endpoints
-- Secret codes are generated using random.org API
-- A create_app() factory is used for testing purposes
+# ❎❎❎❎❎❎❎❎❎ 👾 **Mastermind** 👾 ❎❎❎❎❎❎❎❎❎
+
+Mastermind is a number-guessing game where the player tries to crack a secret 4-number code generated by the computer. Each digit is between the numbers 0 and 7 and the player has 10 attempts to win.  
+
+
+
+## 👾 **How To Play**
+
+✦ Choose a difficulty level:  
+    `✧` Easy: 4-digit code  
+    `✧` Hard: 6-digit code  
+    
+✦ Enter guesses using digits 0-7  
+
+✦ After each guess, the game provides feedback:  
+    `✧`  How many digits are correct **and** in the correct place  
+    `✧`  How many digits are correct **but** in the wrong place  
+    
+✦ You have 10 attempts to crack the code  
+
+✦ The secret code may contain repeated digits  
+
+✦ The game ends when the player wins, runs out of attempts, or chooses to end the game early  
+
+✦ To end the game early enter "Q", to view top 10 players high score on the leaderboard enter "L"  
+
+---
+
+## ❎ Requirements
+This project was developed using **Python 3.11** and depends on the following libraries:
+
+✦ [`Flask`](https://pypi.org/project/Flask/) — backend API  
+✦ [`requests`](https://pypi.org/project/requests/) — frontend API client  
+✦ [`blessed`](https://pypi.org/project/blessed/) — terminal UI rendering  
+✦ [`pytest`](https://pypi.org/project/pytest/) — testing framework  
+
+---
+
+## ❎ Running Tests
+
+✦ From the project root:  
+```bash
+pytest
+```
+
+
+The test suite covers:  
+
+✦ Game creation  
+✦ Valid and invalid guesses  
+✦ Win and loss scenarios  
+✦ Input edge cases  
+✦ Post-game restrictions  
+✦ Tests are located in tests/test_routes.py.  
+
+
