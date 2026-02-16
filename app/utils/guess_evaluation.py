@@ -10,7 +10,9 @@ def get_exact_matches(player_guess, secret_code, code_length):
     return correct_positions, secret_matched, guess_matched
 
 
-def get_partial_matches(player_guess, secret_code, secret_matched, guess_matched, code_length):
+def get_partial_matches(
+    player_guess, secret_code, secret_matched, guess_matched, code_length
+):
     correct_numbers = 0
     for i in range(code_length):
         if guess_matched[i]:
@@ -25,12 +27,11 @@ def get_partial_matches(player_guess, secret_code, secret_matched, guess_matched
 
 
 def evaluate_guess(player_guess, secret_code, code_length):
-    correct_positions, secret_matched, guess_matched  = get_exact_matches(player_guess, secret_code, code_length)
+    correct_positions, secret_matched, guess_matched = get_exact_matches(
+        player_guess, secret_code, code_length
+    )
     correct_numbers = get_partial_matches(
         player_guess, secret_code, secret_matched, guess_matched, code_length
-        )
+    )
 
-    return {
-        "correct_positions": correct_positions,
-        "correct_numbers": correct_numbers
-    }
+    return {"correct_positions": correct_positions, "correct_numbers": correct_numbers}

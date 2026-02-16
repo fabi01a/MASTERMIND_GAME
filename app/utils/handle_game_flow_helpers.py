@@ -4,6 +4,7 @@ from app.utils.terminal import term
 from app.screens.leaderboard_screen import show_leaderboard
 from app.utils.input_widget import blinking_input
 
+
 def handle_game_over(player_name: str) -> bool:
     show_leaderboard()
 
@@ -21,7 +22,13 @@ def handle_game_over(player_name: str) -> bool:
             print(term.firebrick1("Invalid input. Please enter Y or N."))
 
 
-def display_error_and_redraw(error_message: str, guesses: list, feedbacks: list, attempts_remaining: int, delay: float = 1.5):
+def display_error_and_redraw(
+    error_message: str,
+    guesses: list,
+    feedbacks: list,
+    attempts_remaining: int,
+    delay: float = 1.5,
+):
     print(term.clear())
     draw_ui(term, guesses, feedbacks, attempts_remaining)
     print(term.firebrick1(error_message))
@@ -35,7 +42,7 @@ def process_guess_feedback(
     result: dict,
     guesses: list,
     feedbacks: list,
-    attempts_remaining: int
+    attempts_remaining: int,
 ) -> int:
     """
     Appends the new guess and feedback to the tracking lists,

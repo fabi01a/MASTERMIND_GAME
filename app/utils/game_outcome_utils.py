@@ -9,4 +9,3 @@ def interpret_game_outcome(result: dict) -> str:
     elif message.startswith("❌"):
         return "lose"
     return "continue"
-

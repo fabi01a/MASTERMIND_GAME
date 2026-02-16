@@ -14,10 +14,18 @@ def render_instructions(welcome_message, horizontal_border):
     print(term.darkorchid2 + term.center("    • [Hard] level uses 6 digits"))
     print()
     print(term.white + term.center(" After each guess, the game will tell you:"))
-    print(term.seagreen1 + term.center("      • How many digits are correct and in the correct place"))
-    print(term.springgreen3 + term.center("      • How many digits are correct but in the wrong place"))
-    print()                                     
-    print(term.olivedrab1 + term.center("→ The secret code may contain repeated digits"))
+    print(
+        term.seagreen1
+        + term.center("      • How many digits are correct and in the correct place")
+    )
+    print(
+        term.springgreen3
+        + term.center("      • How many digits are correct but in the wrong place")
+    )
+    print()
+    print(
+        term.olivedrab1 + term.center("→ The secret code may contain repeated digits")
+    )
     print(term.white + term.center(" You have 10 attempts to crack the code"))
     print()
 
@@ -26,7 +34,7 @@ def render_instructions(welcome_message, horizontal_border):
 
     print(term.bold("Choose your difficulty level:"))
     print(term.palevioletred1("\n[1] - Easy [4-digit code]"))
-    print(term.darkorchid2("[2] - Hard [6-digit code]"))    
+    print(term.darkorchid2("[2] - Hard [6-digit code]"))
     print(term.firebrick1("\nType Q to end the game early"))
     print(term.bold + term.bright_green("Enter 1 or 2 and press ENTER to begin"))
     print(term.bold + term.lawngreen("Enter L to view the leaderboard"))

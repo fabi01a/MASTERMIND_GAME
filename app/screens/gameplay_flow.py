@@ -9,7 +9,11 @@ from app.utils.validation import validate_guess_input
 from app.utils.exceptions import InvalidGuessError
 from app.utils.game_outcome_utils import interpret_game_outcome
 from app.services.game_outcome_service import check_game_outcome
-from app.utils.handle_game_flow_helpers import handle_game_over, display_error_and_redraw, process_guess_feedback
+from app.utils.handle_game_flow_helpers import (
+    handle_game_over,
+    display_error_and_redraw,
+    process_guess_feedback,
+)
 
 
 def run_game_loop(player_name: str, game_data: dict) -> bool:
@@ -30,7 +34,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         guess_input = blinking_input(
             term.greenyellow(f"Enter your {code_length}-digit guess: "),
             clear_screen=False,
-            max_length=code_length
+            max_length=code_length,
         ).strip()
 
         if guess_input == "Q":
@@ -38,9 +42,14 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             time.sleep(1.5)
             quit_early = True
             break
-        
+
         if not guess_input:
-            display_error_and_redraw("Invalid Input: You must enter a number between 0 - 7 or type Q to quit", guesses, feedbacks, attempts_remaining)
+            display_error_and_redraw(
+                "Invalid Input: You must enter a number between 0 - 7 or type Q to quit",
+                guesses,
+                feedbacks,
+                attempts_remaining,
+            )
             continue
 
         # === VALIDATE INPUT ===
@@ -48,7 +57,12 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             guess = [int(d) for d in guess_input if d.isdigit()]
             validate_guess_input(guess, code_length)
         except (ValueError, InvalidGuessError) as e:
-            display_error_and_redraw("Invalid Input: You must enter a number between 0 - 7 or type Q to quit", guesses, feedbacks, attempts_remaining)
+            display_error_and_redraw(
+                "Invalid Input: You must enter a number between 0 - 7 or type Q to quit",
+                guesses,
+                feedbacks,
+                attempts_remaining,
+            )
             continue
 
         # === SEND TO BACKEND ===
@@ -62,7 +76,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         attempts_remaining = process_guess_feedback(
             guess, result, guesses, feedbacks, attempts_remaining
         )
-        
+
         # === WIN / LOSE CHECK ===
         outcome = interpret_game_outcome(result)
 
@@ -78,6 +92,5 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
             print(term.greenyellow(f"The secret code was: {result['secret_code']}"))
             time.sleep(4)
             break
-    
-    return handle_game_over(player_name)
 
+    return handle_game_over(player_name)

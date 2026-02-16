@@ -4,10 +4,12 @@ from blessed import Terminal
 
 term = Terminal()
 
+
 def main():
     flush_input()
     with term.fullscreen(), term.cbreak(), term.hidden_cursor():
         main_menu()
+
 
 if __name__ == "__main__":
     main()

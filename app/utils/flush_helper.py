@@ -3,6 +3,7 @@ import select
 import termios
 import tty
 
+
 def flush_input():
     """Robustly flush stdin input buffer on Unix-like systems."""
     fd = sys.stdin.fileno()

@@ -3,6 +3,7 @@ from app.models.game_session import GameSession
 from datetime import datetime
 from flask import jsonify
 
+
 def check_game_outcome(game: GameSession, correct_positions: int, feedback: dict):
     if correct_positions == game.code_length:
         game.is_over = True
@@ -11,7 +12,7 @@ def check_game_outcome(game: GameSession, correct_positions: int, feedback: dict
         db.session.commit()
         return {
             "message": "🥳 Congrats! You cracked the secret code!!! 🥳",
-            "feedback": feedback
+            "feedback": feedback,
         }
 
     if game.attempts_remaining <= 0:
@@ -22,8 +23,8 @@ def check_game_outcome(game: GameSession, correct_positions: int, feedback: dict
         return {
             "message": "❌ Game Over - No more attempts left ❌",
             "secret_code": game.secret_code,
-            "feedback": feedback
+            "feedback": feedback,
         }
-    
+
     db.session.commit()
     return None

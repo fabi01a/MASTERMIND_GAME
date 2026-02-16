@@ -3,7 +3,15 @@ from app.utils.ui_helpers import generate_horizontal_border
 from app.screens.instructions_screen import render_instructions
 from app.screens.feedback_table import render_feedback_table
 
-def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=False, welcome_message=None):
+
+def draw_ui(
+    term,
+    guesses,
+    feedbacks,
+    attempts_remaining,
+    show_instructions=False,
+    welcome_message=None,
+):
     print(term.clear())
 
     # === INSTRUCTIONS VIEW ===
@@ -14,4 +22,3 @@ def draw_ui(term, guesses, feedbacks, attempts_remaining, show_instructions=Fals
 
     # === GAME TABLE HEADER ===
     render_feedback_table(guesses, feedbacks, attempts_remaining)
-

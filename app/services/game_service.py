@@ -13,11 +13,13 @@ from app.utils.validation import validate_guess_input
 from app.utils.feedback import generate_feedback_message
 from app.utils.guess_evaluation import evaluate_guess
 
+
 @dataclass
 class GameInitResult:
     game: GameSession
     player: Player
     message: str
+
 
 def initialize_new_game(raw_name: str, difficulty: str) -> GameInitResult:
 
@@ -30,30 +32,36 @@ def initialize_new_game(raw_name: str, difficulty: str) -> GameInitResult:
 
     secret_code = generate_secret_code(code_length)
     game_sesh = create_game_session(
-        player_id=player.player_id, 
-        secret_code=secret_code, 
+        player_id=player.player_id,
+        secret_code=secret_code,
         code_length=code_length,
         max_attempts=max_attempts,
-        difficulty=difficulty
+        difficulty=difficulty,
     )
 
     message = (
         f"Welcome back, {raw_name}! New game created - Good Luck!"
-        if is_returning else
-        f"New game created - Good Luck {raw_name}!"
+        if is_returning
+        else f"New game created - Good Luck {raw_name}!"
     )
 
     return GameInitResult(game=game_sesh, player=player, message=message)
 
 
-def create_game_session(player_id: int, secret_code: list[int], code_length: int, max_attempts: int, difficulty: str):
+def create_game_session(
+    player_id: int,
+    secret_code: list[int],
+    code_length: int,
+    max_attempts: int,
+    difficulty: str,
+):
     new_game = GameSession(
         player_id=player_id,
         secret_code=secret_code,
         attempts_remaining=max_attempts,
         code_length=code_length,
         max_attempts=max_attempts,
-        difficulty=difficulty
+        difficulty=difficulty,
     )
     db.session.add(new_game)
     db.session.commit()
@@ -65,10 +73,10 @@ def process_guess(game_id: int, guess: list[int]) -> dict:
 
     if not game:
         raise GameNotFoundError()
-    
+
     if game.is_over:
         raise GameOverError()
-    
+
     validate_guess_input(guess, game.code_length)
 
     result = evaluate_guess(guess, game.secret_code, game.code_length)
@@ -79,7 +87,7 @@ def process_guess(game_id: int, guess: list[int]) -> dict:
         game_session_id=game.game_session_id,
         guess_value=guess,
         correct_positions=correct_positions,
-        correct_numbers=correct_numbers
+        correct_numbers=correct_numbers,
     )
 
     db.session.add(new_guess)
@@ -89,13 +97,13 @@ def process_guess(game_id: int, guess: list[int]) -> dict:
         correct_positions=correct_positions,
         correct_numbers=correct_numbers,
         attempts_remaining=game.attempts_remaining,
-        player_name=game.player.player_name
+        player_name=game.player.player_name,
     )
 
     feedback = {
         "user_guess": guess,
         "correct_positions": correct_positions,
-        "correct_numbers": correct_numbers
+        "correct_numbers": correct_numbers,
     }
 
     outcome_response = check_game_outcome(game, correct_positions, feedback)
@@ -107,6 +115,5 @@ def process_guess(game_id: int, guess: list[int]) -> dict:
     return {
         "message": feedback_message,
         "feedback": feedback,
-        "attempts_remaining": game.attempts_remaining
+        "attempts_remaining": game.attempts_remaining,
     }
-

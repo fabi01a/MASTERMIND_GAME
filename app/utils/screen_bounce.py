@@ -49,13 +49,8 @@ def splash_screen():
 
             # Draw title (foreground, stable)
             center_y = term.height // 2
+            print(term.move_xy(0, center_y) + term.bold(term.center(title)))
             print(
-                term.move_xy(0, center_y) 
-                + term.bold(term.center(title))
+                term.move_xy(0, center_y + 2) + term.center(term.bright_green(subtitle))
             )
-            print(
-                term.move_xy(0, center_y + 2)
-                + term.center(term.bright_green(subtitle))
-)
             print(end="", flush=True)
-
