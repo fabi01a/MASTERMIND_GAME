@@ -1,5 +1,5 @@
 from app.utils.terminal import term
-from app.utils.ui_helpers import render_screen_title, generate_horizontal_border
+from app.utils.ui_helpers import render_screen_title
 
 
 def render_instructions(welcome_message, horizontal_border):

@@ -1,5 +1,4 @@
 import time
-import requests
 from app.api.api_client import send_guess
 from app.utils.input_widget import blinking_input
 from app.screens.render_ui import draw_ui
@@ -8,7 +7,6 @@ from app.utils.terminal import term
 from app.utils.validation import validate_guess_input
 from app.utils.exceptions import InvalidGuessError
 from app.utils.game_outcome_utils import interpret_game_outcome
-from app.services.game_outcome_service import check_game_outcome
 from app.utils.handle_game_flow_helpers import (
     handle_game_over,
     display_error_and_redraw,
@@ -20,7 +18,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
     """
     Handles the full game loop once the game has been initialized.
     """
-    quit_early = False
+    # quit_early = False
     game_id = game_data["game_id"]
     attempts_remaining = game_data["max_attempts"]
     code_length = game_data["code_length"]
@@ -40,7 +38,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         if guess_input == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(1.5)
-            quit_early = True
+            # quit_early = True
             break
 
         if not guess_input:
@@ -56,7 +54,7 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         try:
             guess = [int(d) for d in guess_input if d.isdigit()]
             validate_guess_input(guess, code_length)
-        except (ValueError, InvalidGuessError) as e:
+        except (ValueError, InvalidGuessError):
             display_error_and_redraw(
                 "Invalid Input: You must enter a number between 0 - 7 or type Q to quit",
                 guesses,

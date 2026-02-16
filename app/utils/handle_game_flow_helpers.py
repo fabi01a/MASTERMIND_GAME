@@ -2,7 +2,6 @@ import time
 from app.screens.render_ui import draw_ui
 from app.utils.terminal import term
 from app.screens.leaderboard_screen import show_leaderboard
-from app.utils.input_widget import blinking_input
 
 
 def handle_game_over(player_name: str) -> bool:

@@ -1,7 +1,6 @@
 from app import db
 from app.models.game_session import GameSession
 from datetime import datetime
-from flask import jsonify
 
 
 def check_game_outcome(game: GameSession, correct_positions: int, feedback: dict):

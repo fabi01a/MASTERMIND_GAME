@@ -1,6 +1,5 @@
 import time
 from app.utils.terminal import term
-from blessed import Terminal
 from typing import Optional
 
 

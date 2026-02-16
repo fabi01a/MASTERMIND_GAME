@@ -22,8 +22,4 @@ def create_app(test_config=None):
 
     app.register_blueprint(routes)
 
-    from app.models.player import Player
-    from app.models.game_session import GameSession
-    from app.models.guess import Guess
-
     return app

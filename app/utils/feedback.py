@@ -1,4 +1,3 @@
-from app import db
 
 
 def generate_feedback_message(

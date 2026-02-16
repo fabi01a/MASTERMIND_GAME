@@ -1,7 +1,6 @@
 import pytest
 from app import create_app
 from app.models.game_session import GameSession
-from app.models.player import Player
 from app import db
 
 TEST_PLAYER_NAME = "TestPlayer"

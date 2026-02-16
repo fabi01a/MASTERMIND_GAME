@@ -1,5 +1,4 @@
 from app.utils.terminal import term
-from app.utils.ui_helpers import generate_horizontal_border
 
 
 def render_feedback_table(guesses, feedbacks, attempts_remaining):

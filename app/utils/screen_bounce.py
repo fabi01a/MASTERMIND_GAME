@@ -1,7 +1,5 @@
-import time
 from app.utils.terminal import term
 from math import floor
-from blessed import Terminal
 from .flush_helper import flush_input
 
 

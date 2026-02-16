@@ -1,17 +1,10 @@
 from flask import Blueprint, request, jsonify
-from app import db
-from app.models.game_session import GameSession
-from app.models.guess import Guess
-from app.services.game_outcome_service import check_game_outcome
 from app.services.game_service import (
-    create_game_session,
     initialize_new_game,
     process_guess,
 )
 from app.services.leaderboard_service import get_top_leaderboard
-from app.services.player_service import get_or_create_player
 from app.utils.difficulty_config import InvalidDifficultyError
-from app.utils.guess_evaluation import evaluate_guess
 from app.utils.exceptions import GameNotFoundError, GameOverError, InvalidGuessError
 
 routes = Blueprint("routes", __name__)

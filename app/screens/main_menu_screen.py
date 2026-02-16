@@ -1,6 +1,4 @@
-import time
 from blessed import Terminal
-from app.screens.leaderboard_screen import show_leaderboard
 from app.screens.gameplay_screen import start_game
 
 term = Terminal()

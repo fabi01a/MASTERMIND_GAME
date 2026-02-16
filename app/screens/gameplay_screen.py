@@ -1,10 +1,8 @@
-import requests
 from app.api.api_client import create_game
 from app.screens.leaderboard_screen import show_leaderboard
-from app.screens.render_ui import draw_ui, render_instructions
+from app.screens.render_ui import render_instructions
 from app.utils.screen_bounce import splash_screen
 from app.utils.terminal import term
-from blessed import Terminal
 import time
 from app.utils.flush_helper import flush_input
 from app.utils.input_helpers import prompt_player_name, prompt_difficulty
