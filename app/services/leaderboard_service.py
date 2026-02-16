@@ -17,7 +17,7 @@ def get_top_leaderboard(limit=10):
             GameSession.session_ended,
         )
         .join(Player, GameSession.player_id == Player.player_id)
-        .filter(GameSession.win == True, GameSession.is_over == True)
+        .filter(GameSession.win, GameSession.is_over)
         .order_by(asc("attempts_used"), GameSession.session_ended)
         .limit(limit)
         .all()
