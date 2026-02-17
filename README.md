@@ -147,8 +147,8 @@ This project was developed using **Python 3.11** and requires:
 The application depends on the following Python libraries:
 
 ✦ [`Flask`](https://pypi.org/project/Flask/) — backend API  
-✦ [`Flask-SQLAlchemy`](https://pypi.org/project/Flask-SQLAlchemy/) — ORM
-✦ [`Flask-Migrate`](https://pypi.org/project/Flask-Migrate/) — database migrations
+✦ [`Flask-SQLAlchemy`](https://pypi.org/project/Flask-SQLAlchemy/) — ORM  
+✦ [`Flask-Migrate`](https://pypi.org/project/Flask-Migrate/) — database migrations  
 ✦ [`requests`](https://pypi.org/project/requests/) — frontend API client  
 ✦ [`blessed`](https://pypi.org/project/blessed/) — terminal UI rendering  
 ✦ [`pytest`](https://pypi.org/project/pytest/) — testing framework  
