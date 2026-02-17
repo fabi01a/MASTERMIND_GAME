@@ -57,12 +57,17 @@ def player_guess(game_id):
 
     try:
         result = process_guess(game_id=int(game_id), guess=guess_input)
+    except ValueError:
+        return jsonify({"error": "Game Not Found"}), 404
     except InvalidGuessError as e:
         return jsonify({"error": e.message}), 400
     except GameNotFoundError:
         return jsonify({"error": "Game Not Found"}), 404
     except GameOverError:
-        return jsonify({"error": "Game Over - Please start a new game"}), 400
+        return (
+            jsonify({"error": "Game Over - Please start a new game"}),
+            400,
+        )
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 

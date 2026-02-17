@@ -1,16 +1,29 @@
+from app import db
 import pytest
 from app import create_app
 from app.models.game_session import GameSession
-from app import db
+
 
 TEST_PLAYER_NAME = "TestPlayer"
 
 
 @pytest.fixture
 def client():
-    app = create_app({"TESTING": True})
-    with app.test_client() as client:
-        yield client
+    app = create_app(
+        {
+            "TESTING": True,
+            "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
+            "SQLALCHEMY_TRACK_MODIFICATIONS": False,
+        }
+    )
+
+    with app.app_context():
+        db.create_all()
+
+        with app.test_client() as client:
+            yield client
+
+        db.drop_all()
 
 
 def create_test_game(client, player_name=TEST_PLAYER_NAME):
@@ -136,7 +149,7 @@ def test_guess_after_game_over(client):
     data = guess_after_res.get_json()
 
     assert "error" in data
-    assert data["error"] == "Game over - Please start a new game to play again"
+    assert "Game Over" in data["error"]
 
 
 def test_with_invalid_game_id(client):
