@@ -126,9 +126,15 @@ Mastermind is a number-guessing game where the player tries to crack a secret 4-
 
 ## ❎ Requirements
 
-This project was developed using **Python 3.11** and depends on the following libraries:
+This project was developed using **Python 3.11** and requires:
+✦ Python 3.11+
+✦ PostgreSQL
+
+The application depends on the following Python libraries:
 
 ✦ [`Flask`](https://pypi.org/project/Flask/) — backend API  
+✦ [`Flask-SQLAlchemy`](https://pypi.org/project/Flask-SQLAlchemy/) — ORM
+✦ [`Flask-Migrate`](https://pypi.org/project/Flask-Migrate/) — database migrations
 ✦ [`requests`](https://pypi.org/project/requests/) — frontend API client  
 ✦ [`blessed`](https://pypi.org/project/blessed/) — terminal UI rendering  
 ✦ [`pytest`](https://pypi.org/project/pytest/) — testing framework  
