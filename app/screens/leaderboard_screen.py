@@ -23,7 +23,7 @@ def show_leaderboard():
     if not data:
         render_screen_title(term, "🏆 MASTERMIND LEADERBOARD 🏆")
         print()
-        print(term.center("No leaderboard entries yet"))
+        print(term.center(term.white("No leaderboard entries yet")))
         print(
             term.center(
                 term.green(
@@ -34,7 +34,11 @@ def show_leaderboard():
         print()
 
         input(
-            term.center("Press " + term.bold("ENTER") + " to return to the main menu")
+            term.center(
+                term.white(
+                    "Press " + term.bold("ENTER") + " to return to the main menu"
+                )
+            )
         )
         return
 

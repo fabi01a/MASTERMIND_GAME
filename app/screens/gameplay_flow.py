@@ -18,7 +18,6 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
     """
     Handles the full game loop once the game has been initialized.
     """
-    # quit_early = False
     game_id = game_data["game_id"]
     attempts_remaining = game_data["max_attempts"]
     code_length = game_data["code_length"]
@@ -38,7 +37,6 @@ def run_game_loop(player_name: str, game_data: dict) -> bool:
         if guess_input == "Q":
             print(term.firebrick1("\nYou've ended the game early. Goodbye!"))
             time.sleep(1.5)
-            # quit_early = True
             break
 
         if not guess_input:

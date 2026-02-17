@@ -6,27 +6,31 @@ def render_instructions(welcome_message, horizontal_border):
     print(term.clear())
     render_screen_title(term, "👾 MASTERMIND 👾")
     print()
-    print(term.center(term.bold("Game Rules:")))
-    print(term.center(term.bold("-----------")))
-    print(term.center(" Guess the secret number code"))
-    print(term.olivedrab1 + term.center(" Use only numbers from 0 to 7"))
-    print(term.palevioletred1 + term.center("    • [Easy] level uses 4 digits"))
-    print(term.darkorchid2 + term.center("    • [Hard] level uses 6 digits"))
+    print(term.white + term.center(term.bold(("Game Rules:"))))
+    print(term.darkorchid2(term.center(term.bold("-----------"))))
+    print(term.springgreen(term.center(" Guess the secret number code")))
+    print(term.olivedrab1(term.center(" Use only numbers from 0 to 7")))
+    print(term.palevioletred1(term.center("    • [Easy] level uses 4 digits")))
+    print(term.darkorchid2(term.center("    • [Hard] level uses 6 digits")))
     print()
-    print(term.white + term.center(" After each guess, the game will tell you:"))
+    print(term.white(term.center(" After each guess, the game will tell you:")))
     print(
-        term.seagreen1
-        + term.center("      • How many digits are correct and in the correct place")
+        term.bright_green(
+            term.center("      • How many digits are correct and in the correct place")
+        )
     )
     print(
-        term.springgreen3
-        + term.center("      • How many digits are correct but in the wrong place")
+        term.olivedrab1(
+            term.center("      • How many digits are correct but in the wrong place")
+        )
     )
     print()
     print(
-        term.olivedrab1 + term.center("→ The secret code may contain repeated digits")
+        term.springgreen(
+            term.center(term.bold("→ The secret code may contain repeated digits"))
+        )
     )
-    print(term.white + term.center(" You have 10 attempts to crack the code"))
+    print(term.white(term.center(term.bold(" You have 10 attempts to crack the code"))))
     print()
 
     if welcome_message:
@@ -37,4 +41,4 @@ def render_instructions(welcome_message, horizontal_border):
     print(term.darkorchid2("[2] - Hard [6-digit code]"))
     print(term.firebrick1("\nType Q to end the game early"))
     print(term.bold + term.bright_green("Enter 1 or 2 and press ENTER to begin"))
-    print(term.bold + term.lawngreen("Enter L to view the leaderboard"))
+    print(term.bold + term.olivedrab1("Enter L to view the leaderboard"))

@@ -86,7 +86,8 @@ pip install -r requirements.txt
 
 ### 4. Create The Database
 
-make sure PostgreSQL is running, then:
+(Make sure PostgreSQL is installed and running.
+If this is your first time, you may need to create a Postgres role)
 
 ```bash
 createdb mastermind_db
