@@ -20,13 +20,13 @@ def render_game_started_screen(welcome_message: str, attempts_remaining: int):
     width = term.width
     horizontal_border = "X" * width
 
-    print(term.bright_green + term.bold(horizontal_border))
-    print(term.bright_green + term.bold(term.center("GAME STARTED")))
-    print(term.bright_green + term.bold(horizontal_border))
+    print(term.bright_green(term.bold(horizontal_border)))
+    print(term.white(term.bold(term.center("👾 GAME STARTED 👾"))))
+    print(term.bright_green(term.bold(horizontal_border)))
     print()
 
     if welcome_message:
-        print(term.greenyellow(term.center(welcome_message)))
+        print(term.olivedrab1(term.center(welcome_message)))
         print()
 
     print(term.bold(f"You have {attempts_remaining} attempts remaining\n"))
