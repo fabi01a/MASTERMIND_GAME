@@ -22,7 +22,7 @@ This project was built to practice **full-stack** system design beyond CRUD appl
 ✦ **Flask** (REST API)  
 ✦ **SQLAlchemy** (ORM)  
 ✦ **Blessed** (terminal UI rendering)  
-✦ **SQLite** (development database)  
+✦ **PostgreSQL** (local development database)  
 ✦ **pytest** (testing)  
 
 ---
@@ -74,7 +74,7 @@ cd MASTERMIND_GAME
 ### 2. Create & Activate A Virtual Environment
 
 ```bash
-python3 -m venv venv
+python3.11 -m venv venv
 source venv/bin/activate
 ```
 
@@ -84,13 +84,27 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Start The Backend Server
+### 4. Create The Database
+
+make sure PostgreSQL is running, then:
+
+```bash
+createdb mastermind_db
+```
+
+### 5. Initialize Database Tables
+
+```bash
+python -m app.init_db
+```
+
+### 6. Start The Backend Server
 
 ```bash
 flask run
 ```
 
-### 5.Start The CLI Game (in a separate terminal)
+### 7. Start The CLI Game (in a separate terminal)
 
 ```bash
 python cli_game.py

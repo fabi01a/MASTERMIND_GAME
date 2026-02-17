@@ -11,7 +11,7 @@ def create_app(test_config=None):
     else:
         app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
             "DATABASE_URL",
-            "postgresql://mastermind_user:yourpassword@localhost/mastermind_db",
+            "postgresql:///mastermind_db",
         )
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
