@@ -21,7 +21,10 @@ def show_leaderboard():
 
     data = response.json()
     if not data:
-        print(term.bold("No leaderboard data yet"))
+        print("No leaderboard entries yet")
+        print(
+            term.green(term.bold("Be the first to win and claim the top spot 🏆 👾 🏆"))
+        )
         return
 
     render_screen_title(term, "🏆 MASTERMIND LEADERBOARD 🏆")
