@@ -1,3 +1,4 @@
+# review
 def interpret_game_outcome(result: dict) -> str:
     """
     Determines outcome from backend response.

@@ -1,3 +1,4 @@
+# review
 class GameNotFoundError(Exception):
     """Raised when a game session cannot be found by ID"""
 

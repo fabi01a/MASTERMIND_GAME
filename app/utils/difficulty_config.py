@@ -1,6 +1,3 @@
-# utility/difficulty_config.py
-
-
 class InvalidDifficultyError(ValueError):
     """Raised when an invalid difficulty level is provided"""
 

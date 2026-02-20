@@ -1,3 +1,4 @@
+# review
 def format_table_row(columns: list[str], widths: list[int], sep: str = " | ") -> str:
     """
     Formats a row of text aligned to the given column widths.
