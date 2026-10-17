@@ -17,6 +17,14 @@ This project was built to practice **full-stack** system design beyond CRUD appl
 
 ---
 
+## ❎ Demo
+
+https://github.com/user-attachments/assets/3534abba-c09a-4f00-b357-eca375fca2ce
+
+
+
+---
+
 ## ❎ Tech Stack
 
 ✦ **Python**  
